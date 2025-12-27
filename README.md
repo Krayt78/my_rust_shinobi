@@ -3,67 +3,130 @@
     <img src="https://raw.githubusercontent.com/leptos-rs/leptos/main/docs/logos/Leptos_logo_RGB.svg" alt="Leptos Logo">
 </picture>
 
-# Leptos Axum Starter Template
+# My Rust Shinobi
 
-This is a template for use with the [Leptos](https://github.com/leptos-rs/leptos) web framework and the [cargo-leptos](https://github.com/akesson/cargo-leptos) tool using [Axum](https://github.com/tokio-rs/axum).
+A Leptos web application with Polkadot wallet integration, built with [Leptos](https://github.com/leptos-rs/leptos) and [Axum](https://github.com/tokio-rs/axum).
 
-## Creating your template repo
+## Features
 
-If you don't have `cargo-leptos` installed you can install it with
+- **Polkadot Wallet Connection** - Connect to browser wallet extensions (Polkadot.js, Talisman, SubWallet)
+- **Server-Side Rendering** - Full SSR support with Axum
+- **Hot Reloading** - Fast development with cargo-leptos watch mode
+
+## Prerequisites
+
+Make sure you have the following installed:
+
+1. **Rust nightly**: `rustup toolchain install nightly --allow-downgrade`
+2. **WASM target**: `rustup target add wasm32-unknown-unknown`
+3. **cargo-leptos**: `cargo install cargo-leptos --locked`
+4. **Node.js & npm**: Required for bundling wallet JavaScript
+5. **Sass** (optional): `npm install -g sass`
+
+## Setup
+
+Install dependencies:
 
 ```bash
-cargo install cargo-leptos --locked
+npm install
 ```
-
-Then run
-```bash
-cargo leptos new --git https://github.com/leptos-rs/start-axum
-```
-
-to generate a new project template.
-
-```bash
-cd my_rust_shinobi
-```
-
-to go to your newly created project.
-Feel free to explore the project structure, but the best place to start with your application code is in `src/app.rs`.
-Additionally, Cargo.toml may need updating as new versions of the dependencies are released, especially if things are not working after a `cargo update`.
 
 ## Running your project
 
+The recommended way to run the project (builds wallet JS + starts Leptos):
+
 ```bash
-cargo leptos watch
+npm run dev
 ```
 
-## Installing Additional Tools
+Or manually:
 
-By default, `cargo-leptos` uses `nightly` Rust, `cargo-generate`, and `sass`. If you run into any trouble, you may need to install one or more of these tools.
+```bash
+npm run build:wallet  # Bundle the wallet JavaScript
+cargo leptos watch    # Start the dev server
+```
 
-1. `rustup toolchain install nightly --allow-downgrade` - make sure you have Rust nightly
-2. `rustup target add wasm32-unknown-unknown` - add the ability to compile Rust to WebAssembly
-3. `cargo install cargo-generate` - install `cargo-generate` binary (should be installed automatically in future)
-4. `npm install -g sass` - install `dart-sass` (should be optional in future
-5. Run `npm install` in end2end subdirectory before test
+Then open http://127.0.0.1:3000 in your browser.
+
+## Project Structure
+
+```
+src/
+├── app.rs              # Main app component and routes
+├── lib.rs              # Library entry point (WASM hydration)
+├── main.rs             # Server entry point (Axum)
+└── wallet/
+    ├── mod.rs          # Wallet bindings (Rust <-> JavaScript)
+    ├── context.rs      # Wallet state management
+    ├── components.rs   # Wallet UI components
+    └── polkadot_wallet.ts  # Polkadot.js integration (TypeScript)
+
+public/
+└── wallet.js           # Bundled wallet JavaScript (generated)
+
+style/
+└── main.scss           # Global styles
+```
+
+## Wallet Connection
+
+This project includes Polkadot wallet integration. To use it:
+
+1. Install a Polkadot-compatible browser extension:
+   - [Polkadot.js Extension](https://polkadot.js.org/extension/)
+   - [Talisman](https://talisman.xyz/)
+   - [SubWallet](https://subwallet.app/)
+
+2. Click the "Connect Wallet" button in the app
+3. Approve the connection in your wallet extension
+
+### Wallet Development
+
+The wallet JavaScript is bundled from `src/wallet/polkadot_wallet.ts` using esbuild. If you modify this file, rebuild it with:
+
+```bash
+npm run build:wallet
+```
+
+The bundled output goes to `public/wallet.js` and is served as a static asset.
 
 ## Compiling for Release
+
 ```bash
+npm run build
+```
+
+Or manually:
+
+```bash
+npm run build:wallet
 cargo leptos build --release
 ```
 
-Will generate your server binary in target/release and your site package in target/site
+This will generate your server binary in `target/release` and your site package in `target/site`.
 
 ## Testing Your Project
+
+First, install test dependencies:
+
+```bash
+cd end2end && npm install && cd ..
+```
+
+Then run the tests:
+
 ```bash
 cargo leptos end-to-end
 ```
+
+Or for release mode:
 
 ```bash
 cargo leptos end-to-end --release
 ```
 
 Cargo-leptos uses Playwright as the end-to-end test tool.
-Tests are located in end2end/tests directory.
+Tests are located in `end2end/tests` directory.
 
 ## Executing a Server on a Remote Machine Without the Toolchain
 After running a `cargo leptos build --release` the minimum files needed are:

@@ -2,3 +2,59 @@ body {
 	font-family: sans-serif;
 	text-align: center;
 }
+
+.wallet-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.connect-wallet-btn {
+    background: linear-gradient(135deg, #e6007a 0%, #552bbf 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(230, 0, 122, 0.4);
+    }
+    
+    &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+}
+
+.wallet-connected {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(85, 43, 191, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(230, 0, 122, 0.3);
+}
+
+.wallet-address {
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+
+.account-selector {
+    background: transparent;
+    border: 1px solid rgba(230, 0, 122, 0.3);
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    color: inherit;
+}
+
+.wallet-error {
+    color: #e6007a;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}

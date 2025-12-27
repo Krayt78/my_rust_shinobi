@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "@polkadot/extension-dapp": "^0.62.6",
+    "@polkadot/util": "^14.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "esbuild": "^0.20.0"
+  },
+  "scripts": {
+    "build:wallet": "esbuild src/wallet/polkadot_wallet.ts --bundle --outfile=public/wallet.js --format=iife --global-name=polkadotWallet",
+    "dev": "npm run build:wallet && cargo leptos watch",
+    "build": "npm run build:wallet && cargo leptos build --release"
+  }
+}

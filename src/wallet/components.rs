@@ -1,5 +1,6 @@
 use leptos::prelude::*;
 use super::{context::use_wallet, connect_polkadot_wallet, WalletAccount};
+use crate::api::authenticate_player;
 
 #[component]
 pub fn ConnectWalletButton() -> impl IntoView {
@@ -13,14 +14,49 @@ pub fn ConnectWalletButton() -> impl IntoView {
             w.error = None;
         });
         
+        // Step 1: Connect to wallet extension
         match connect_polkadot_wallet("My Rust Shinobi").await {
             Ok(accounts) => {
+                let selected_account = accounts.first().cloned();
+                
                 wallet.update(|w| {
-                    w.loading = false;
-                    w.connected = true;
                     w.accounts = accounts.clone();
-                    w.selected_account = accounts.first().cloned();
+                    w.selected_account = selected_account.clone();
                 });
+                
+                // Step 2: Authenticate with the server
+                if let Some(account) = selected_account {
+                    match authenticate_player(account.address.clone()).await {
+                        Ok(player_info) => {
+                            let is_new = player_info.is_new;
+                            leptos::logging::log!(
+                                "Player authenticated: {} (new: {})", 
+                                player_info.id, 
+                                is_new
+                            );
+                            
+                            wallet.update(|w| {
+                                w.loading = false;
+                                w.connected = true;
+                                w.is_new_player = is_new;
+                                w.player = Some(player_info);
+                            });
+                        }
+                        Err(e) => {
+                            leptos::logging::log!("Authentication error: {:?}", e);
+                            wallet.update(|w| {
+                                w.loading = false;
+                                w.connected = true; // Still connected to wallet
+                                w.error = Some(format!("Server error: {}", e));
+                            });
+                        }
+                    }
+                } else {
+                    wallet.update(|w| {
+                        w.loading = false;
+                        w.error = Some("No accounts found in wallet".to_string());
+                    });
+                }
             }
             Err(e) => {
                 wallet.update(|w| {
@@ -38,6 +74,8 @@ pub fn ConnectWalletButton() -> impl IntoView {
             .map(|a| truncate_address(&a.address))
     };
     let error_message = move || wallet.get().error.clone();
+    let player_info = move || wallet.get().player.clone();
+    let is_new_player = move || wallet.get().is_new_player;
     
     view! {
         <div class="wallet-container">
@@ -45,9 +83,18 @@ pub fn ConnectWalletButton() -> impl IntoView {
                 if is_connected() {
                     view! {
                         <div class="wallet-connected">
-                            <span class="wallet-address">
-                                {selected_address()}
-                            </span>
+                            <div class="wallet-info">
+                                <span class="wallet-address">
+                                    {selected_address()}
+                                </span>
+                                {move || player_info().map(|p| {
+                                    view! {
+                                        <span class="player-name">
+                                            {p.username.unwrap_or_else(|| "Anonymous Ninja".to_string())}
+                                        </span>
+                                    }
+                                })}
+                            </div>
                             <AccountSelector />
                         </div>
                     }.into_any()
@@ -61,6 +108,19 @@ pub fn ConnectWalletButton() -> impl IntoView {
                             {move || if is_loading() { "Connecting..." } else { "Connect Wallet" }}
                         </button>
                     }.into_any()
+                }
+            }}
+            
+            // Show welcome message for new players
+            {move || {
+                if is_new_player() {
+                    Some(view! {
+                        <div class="new-player-welcome">
+                            <p>"🎉 Welcome, new ninja! Your account has been created."</p>
+                        </div>
+                    })
+                } else {
+                    None
                 }
             }}
             

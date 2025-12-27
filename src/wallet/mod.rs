@@ -1,4 +1,4 @@
-mod context;
+pub mod context;
 mod components;
 
 pub use context::*;

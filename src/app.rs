@@ -9,7 +9,7 @@ use leptos_router::{
 
 use crate::wallet::WalletProvider;
 use crate::components::TopNavBar;
-use crate::pages::HomePage;
+use crate::pages::{HomePage, CharacterPage};
 
 /// Server-side rendered HTML shell
 pub fn shell(options: LeptosOptions) -> impl IntoView {
@@ -55,6 +55,7 @@ pub fn App() -> impl IntoView {
                     <main class="main-content">
                         <Routes fallback=|| "Page not found.".into_view()>
                             <Route path=StaticSegment("") view=HomePage/>
+                            <Route path=StaticSegment("character") view=CharacterPage/>
                         </Routes>
                     </main>
                 </div>

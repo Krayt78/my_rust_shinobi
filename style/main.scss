@@ -815,3 +815,607 @@ html, body {
         display: none;
     }
 }
+
+// ==========================================
+// CHARACTER PAGE
+// ==========================================
+
+// Rarity Colors
+$rarity-common: #9d9d9d;
+$rarity-uncommon: #1eff00;
+$rarity-rare: #0070dd;
+$rarity-epic: #a335ee;
+$rarity-legendary: #ff8000;
+
+.character-page {
+    height: calc(100vh - 60px - 2rem);
+    padding: 0;
+}
+
+.character-layout {
+    display: grid;
+    grid-template-columns: 25% 25% 50%;
+    gap: 1rem;
+    height: 100%;
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+// Not Connected State
+.not-connected-full {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    
+    .lock-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+    
+    h2 {
+        font-family: $font-display;
+        color: $text-secondary;
+        margin-bottom: 0.5rem;
+    }
+    
+    p {
+        color: $text-muted;
+    }
+}
+
+// ==========================================
+// STATS PANEL (Left)
+// ==========================================
+.character-stats-panel {
+    background: $bg-panel;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.stats-panel {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: auto;
+    height: 100%;
+    
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: $bg-darker;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: $border-color;
+        border-radius: 3px;
+    }
+}
+
+.character-header {
+    text-align: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid $border-color;
+}
+
+.character-name-level {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    
+    .char-name {
+        font-family: $font-display;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: $text-primary;
+    }
+    
+    .char-level {
+        font-family: $font-display;
+        font-size: 0.85rem;
+        color: $accent-gold;
+        background: rgba($accent-gold, 0.15);
+        padding: 0.2rem 0.6rem;
+        border-radius: 12px;
+        border: 1px solid rgba($accent-gold, 0.3);
+    }
+}
+
+.resource-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.section-title {
+    font-family: $font-display;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: $text-muted;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid rgba($border-color, 0.5);
+}
+
+.details-section,
+.primary-stats-section,
+.combat-stats-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.5rem;
+    background: rgba($bg-darker, 0.5);
+    border-radius: 6px;
+    
+    .detail-icon {
+        font-size: 0.9rem;
+        width: 20px;
+        text-align: center;
+    }
+    
+    .detail-label {
+        flex: 1;
+        color: $text-secondary;
+        font-size: 0.85rem;
+    }
+    
+    .detail-value {
+        font-family: $font-display;
+        font-size: 0.85rem;
+        color: $text-primary;
+    }
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.5rem;
+    background: rgba($bg-darker, 0.3);
+    border-radius: 4px;
+    transition: background 0.2s;
+    
+    &:hover {
+        background: rgba($bg-darker, 0.6);
+    }
+    
+    .stat-icon {
+        font-size: 0.85rem;
+        width: 18px;
+        text-align: center;
+    }
+    
+    .stat-name {
+        flex: 1;
+        color: $text-secondary;
+        font-size: 0.8rem;
+    }
+    
+    .stat-value {
+        font-family: $font-display;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: $accent-green;
+        
+        &.combat {
+            color: $accent-primary;
+        }
+    }
+}
+
+// ==========================================
+// EQUIPMENT PANEL (Center)
+// ==========================================
+.character-equipment-panel {
+    background: $bg-panel;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.equipment-panel {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    
+    .panel-title {
+        font-family: $font-display;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: $text-secondary;
+        text-align: center;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid $border-color;
+        margin-bottom: 1rem;
+    }
+}
+
+.equipment-grid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.equipment-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    
+    .spacer {
+        width: 80px;
+    }
+}
+
+.main-row {
+    gap: 1.5rem;
+}
+
+.equipment-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    
+    .slot-frame {
+        width: 56px;
+        height: 56px;
+        background: rgba($bg-darker, 0.8);
+        border: 2px solid $border-color;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        
+        &:hover {
+            border-color: $accent-primary;
+            background: rgba($accent-primary, 0.1);
+            transform: scale(1.05);
+        }
+        
+        .slot-icon {
+            font-size: 1.5rem;
+            opacity: 0.4;
+        }
+    }
+    
+    .slot-label {
+        font-size: 0.65rem;
+        color: $text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+}
+
+.character-model {
+    .model-frame {
+        width: 160px;
+        height: 200px;
+        background: linear-gradient(180deg, rgba($bg-darker, 0.5) 0%, rgba($accent-primary, 0.05) 100%);
+        border: 2px solid $border-color;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center bottom, rgba($accent-primary, 0.1), transparent 70%);
+        }
+        
+        .ninja-avatar {
+            font-size: 5rem;
+            z-index: 1;
+            animation: float 3s ease-in-out infinite;
+        }
+    }
+}
+
+.equipment-summary {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid $border-color;
+}
+
+.summary-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    .summary-icon {
+        font-size: 1rem;
+    }
+    
+    .summary-label {
+        color: $text-secondary;
+        font-size: 0.8rem;
+    }
+    
+    .summary-value {
+        font-family: $font-display;
+        font-size: 0.9rem;
+        color: $text-primary;
+    }
+}
+
+// ==========================================
+// INVENTORY PANEL (Right)
+// ==========================================
+.character-inventory-panel {
+    background: $bg-panel;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.inventory-panel {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    
+    .panel-title {
+        font-family: $font-display;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: $text-secondary;
+        text-align: center;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid $border-color;
+        margin-bottom: 0.75rem;
+    }
+}
+
+.inventory-tabs {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 0.75rem;
+    
+    .tab-btn {
+        flex: 1;
+        padding: 0.5rem;
+        background: rgba($bg-darker, 0.5);
+        border: 1px solid $border-color;
+        border-radius: 6px;
+        color: $text-secondary;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        
+        &:hover {
+            background: rgba($bg-darker, 0.8);
+            color: $text-primary;
+        }
+        
+        &.active {
+            background: rgba($accent-primary, 0.15);
+            border-color: $accent-primary;
+            color: $accent-primary;
+        }
+    }
+}
+
+.inventory-search {
+    margin-bottom: 0.75rem;
+    
+    .search-input {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        background: rgba($bg-darker, 0.8);
+        border: 1px solid $border-color;
+        border-radius: 6px;
+        color: $text-primary;
+        font-family: $font-body;
+        font-size: 0.85rem;
+        
+        &::placeholder {
+            color: $text-muted;
+        }
+        
+        &:focus {
+            outline: none;
+            border-color: $accent-primary;
+        }
+    }
+}
+
+.inventory-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 0.4rem;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+    
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: $bg-darker;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: $border-color;
+        border-radius: 2px;
+    }
+}
+
+.inventory-slot {
+    aspect-ratio: 1;
+    background: rgba($bg-darker, 0.6);
+    border: 1px solid $border-color;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.15s;
+    
+    &:hover {
+        border-color: $text-secondary;
+        transform: scale(1.05);
+        z-index: 1;
+    }
+    
+    &.empty {
+        opacity: 0.5;
+        
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+    
+    &.item {
+        .item-icon {
+            font-size: 1.4rem;
+        }
+        
+        .item-quantity {
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-family: $font-display;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: $text-primary;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+        
+        // Rarity borders
+        &.common {
+            border-color: $rarity-common;
+        }
+        
+        &.uncommon {
+            border-color: $rarity-uncommon;
+            box-shadow: 0 0 8px rgba($rarity-uncommon, 0.3);
+        }
+        
+        &.rare {
+            border-color: $rarity-rare;
+            box-shadow: 0 0 8px rgba($rarity-rare, 0.4);
+        }
+        
+        &.epic {
+            border-color: $rarity-epic;
+            box-shadow: 0 0 10px rgba($rarity-epic, 0.5);
+        }
+        
+        &.legendary {
+            border-color: $rarity-legendary;
+            box-shadow: 0 0 12px rgba($rarity-legendary, 0.6);
+            animation: legendary-glow 2s ease-in-out infinite alternate;
+        }
+    }
+}
+
+@keyframes legendary-glow {
+    from {
+        box-shadow: 0 0 8px rgba($rarity-legendary, 0.4);
+    }
+    to {
+        box-shadow: 0 0 16px rgba($rarity-legendary, 0.8);
+    }
+}
+
+.inventory-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.75rem;
+    margin-top: 0.75rem;
+    border-top: 1px solid $border-color;
+}
+
+.inventory-weight {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    
+    .weight-icon {
+        font-size: 0.9rem;
+    }
+    
+    .weight-text {
+        font-family: $font-display;
+        font-size: 0.8rem;
+        color: $text-secondary;
+    }
+}
+
+.inventory-currency {
+    .currency {
+        font-family: $font-display;
+        font-size: 0.85rem;
+        
+        &.gold {
+            color: $accent-gold;
+        }
+    }
+}
+
+// Character Page Responsive
+@media (max-width: 1200px) {
+    .character-layout {
+        grid-template-columns: 28% 28% 44%;
+    }
+}
+
+@media (max-width: 992px) {
+    .character-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+        gap: 1rem;
+    }
+    
+    .character-stats-panel,
+    .character-equipment-panel,
+    .character-inventory-panel {
+        min-height: 400px;
+    }
+    
+    .equipment-grid {
+        padding: 1rem 0;
+    }
+}

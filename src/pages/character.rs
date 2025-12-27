@@ -60,7 +60,7 @@ fn StatsPanel() -> impl IntoView {
                     <span class="char-name">
                         {move || player_info()
                             .and_then(|p| p.username)
-                            .unwrap_or_else(|| "Anonymous Ninja".to_string())}
+                            .unwrap_or_else(|| "Wandering Hero".to_string())}
                     </span>
                     <span class="char-level">"Lv. 1"</span>
                 </div>
@@ -70,45 +70,45 @@ fn StatsPanel() -> impl IntoView {
             <div class="resource-bars">
                 <StatBar label="EXP" current=0 max=100 color="#f1c40f" />
                 <StatBar label="HP" current=100 max=100 color="#e74c3c" />
-                <StatBar label="Chakra" current=50 max=50 color="#3498db" />
+                <StatBar label="Mana" current=50 max=50 color="#3498db" />
             </div>
             
             // Character Details
             <div class="details-section">
                 <h3 class="section-title">"Details"</h3>
                 <div class="detail-row">
-                    <span class="detail-icon">"🏯"</span>
-                    <span class="detail-label">"Village"</span>
-                    <span class="detail-value">"Konoha"</span>
+                    <span class="detail-icon">"🏰"</span>
+                    <span class="detail-label">"Kingdom"</span>
+                    <span class="detail-value">"Eldoria"</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-icon">"⚔️"</span>
                     <span class="detail-label">"Class"</span>
-                    <span class="detail-value">"Genin"</span>
+                    <span class="detail-value">"Adventurer"</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-icon">"🎭"</span>
                     <span class="detail-label">"Specialty"</span>
-                    <span class="detail-value">"Ninjutsu"</span>
+                    <span class="detail-value">"Warrior"</span>
                 </div>
             </div>
             
-            // Primary Stats
+            // Primary Stats (D&D style)
             <div class="primary-stats-section">
-                <h3 class="section-title">"Primary Stats"</h3>
+                <h3 class="section-title">"Attributes"</h3>
                 <div class="stat-row">
                     <span class="stat-icon">"💪"</span>
                     <span class="stat-name">"Strength"</span>
                     <span class="stat-value">"10"</span>
                 </div>
                 <div class="stat-row">
-                    <span class="stat-icon">"⚡"</span>
-                    <span class="stat-name">"Agility"</span>
+                    <span class="stat-icon">"🏃"</span>
+                    <span class="stat-name">"Dexterity"</span>
                     <span class="stat-value">"12"</span>
                 </div>
                 <div class="stat-row">
                     <span class="stat-icon">"❤️"</span>
-                    <span class="stat-name">"Stamina"</span>
+                    <span class="stat-name">"Constitution"</span>
                     <span class="stat-value">"8"</span>
                 </div>
                 <div class="stat-row">
@@ -118,12 +118,12 @@ fn StatsPanel() -> impl IntoView {
                 </div>
                 <div class="stat-row">
                     <span class="stat-icon">"👁️"</span>
-                    <span class="stat-name">"Perception"</span>
+                    <span class="stat-name">"Wisdom"</span>
                     <span class="stat-value">"11"</span>
                 </div>
                 <div class="stat-row">
-                    <span class="stat-icon">"🍀"</span>
-                    <span class="stat-name">"Luck"</span>
+                    <span class="stat-icon">"✨"</span>
+                    <span class="stat-name">"Charisma"</span>
                     <span class="stat-value">"7"</span>
                 </div>
             </div>
@@ -162,14 +162,14 @@ fn EquipmentPanel() -> impl IntoView {
             <div class="equipment-grid">
                 // Top row - Head
                 <div class="equipment-row top-row">
-                    <EquipmentSlot slot_type="head" icon="🎭" label="Head" />
+                    <EquipmentSlot slot_type="head" icon="🪖" label="Helm" />
                 </div>
                 
                 // Second row - Shoulders
                 <div class="equipment-row shoulder-row">
-                    <EquipmentSlot slot_type="shoulder-l" icon="🛡️" label="L.Shoulder" />
+                    <EquipmentSlot slot_type="shoulder-l" icon="🛡️" label="L.Pauldron" />
                     <div class="spacer"></div>
-                    <EquipmentSlot slot_type="shoulder-r" icon="🛡️" label="R.Shoulder" />
+                    <EquipmentSlot slot_type="shoulder-r" icon="🛡️" label="R.Pauldron" />
                 </div>
                 
                 // Main row - Weapon, Character, Off-hand
@@ -178,23 +178,23 @@ fn EquipmentPanel() -> impl IntoView {
                     
                     <div class="character-model">
                         <div class="model-frame">
-                            <div class="ninja-avatar">"🥷"</div>
+                            <div class="ninja-avatar">"🧙‍♂️"</div>
                         </div>
                     </div>
                     
-                    <EquipmentSlot slot_type="offhand" icon="🗡️" label="Off-hand" />
+                    <EquipmentSlot slot_type="offhand" icon="🛡️" label="Shield" />
                 </div>
                 
                 // Armor row - Chest, Hands
                 <div class="equipment-row armor-row">
-                    <EquipmentSlot slot_type="chest" icon="👘" label="Chest" />
-                    <EquipmentSlot slot_type="hands" icon="🧤" label="Hands" />
+                    <EquipmentSlot slot_type="chest" icon="🎽" label="Chestplate" />
+                    <EquipmentSlot slot_type="hands" icon="🧤" label="Gauntlets" />
                 </div>
                 
                 // Bottom row - Legs, Feet
                 <div class="equipment-row bottom-row">
-                    <EquipmentSlot slot_type="legs" icon="👖" label="Legs" />
-                    <EquipmentSlot slot_type="feet" icon="👟" label="Feet" />
+                    <EquipmentSlot slot_type="legs" icon="👖" label="Greaves" />
+                    <EquipmentSlot slot_type="feet" icon="🥾" label="Boots" />
                 </div>
                 
                 // Accessory row
@@ -214,8 +214,8 @@ fn EquipmentPanel() -> impl IntoView {
                 </div>
                 <div class="summary-item">
                     <span class="summary-icon">"🛡️"</span>
-                    <span class="summary-label">"Total Armor"</span>
-                    <span class="summary-value">"32"</span>
+                    <span class="summary-label">"Armor Class"</span>
+                    <span class="summary-value">"15"</span>
                 </div>
             </div>
         </div>
@@ -280,19 +280,19 @@ fn InventoryPanel() -> impl IntoView {
             
             // Inventory Grid (8 columns)
             <div class="inventory-grid">
-                // Sample items - Row 1
-                <InventorySlot icon="🍙" quantity=5 rarity="common" />
-                <InventorySlot icon="💊" quantity=3 rarity="common" />
+                // Sample items - Fantasy themed items - Row 1
+                <InventorySlot icon="🍞" quantity=5 rarity="common" />
+                <InventorySlot icon="🧪" quantity=3 rarity="common" />
                 <InventorySlot icon="📜" quantity=1 rarity="uncommon" />
                 <InventorySlot icon="💣" quantity=10 rarity="common" />
                 <InventorySlot icon="🗡️" quantity=1 rarity="rare" />
                 <InventorySlot icon="🪄" quantity=1 rarity="epic" />
-                <InventorySlot icon="🎭" quantity=1 rarity="legendary" />
+                <InventorySlot icon="👑" quantity=1 rarity="legendary" />
                 <InventorySlot icon="🧪" quantity=8 rarity="common" />
                 
                 // Row 2
-                <InventorySlot icon="🥋" quantity=1 rarity="uncommon" />
-                <InventorySlot icon="👘" quantity=1 rarity="rare" />
+                <InventorySlot icon="🛡️" quantity=1 rarity="uncommon" />
+                <InventorySlot icon="🎽" quantity=1 rarity="rare" />
                 <InventorySlot icon="🩹" quantity=15 rarity="common" />
                 <InventorySlot icon="📿" quantity=1 rarity="epic" />
                 <EmptySlot />
@@ -314,7 +314,7 @@ fn InventoryPanel() -> impl IntoView {
                     <span class="weight-text">"24/100"</span>
                 </div>
                 <div class="inventory-currency">
-                    <span class="currency gold">"🪙 1,250"</span>
+                    <span class="currency gold">"🪙 1,250 Gold"</span>
                 </div>
             </div>
         </div>

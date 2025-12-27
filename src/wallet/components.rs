@@ -15,7 +15,7 @@ pub fn ConnectWalletButton() -> impl IntoView {
         });
         
         // Step 1: Connect to wallet extension
-        match connect_polkadot_wallet("My Rust Shinobi").await {
+        match connect_polkadot_wallet("Realm of Legends").await {
             Ok(accounts) => {
                 let selected_account = accounts.first().cloned();
                 
@@ -90,7 +90,7 @@ pub fn ConnectWalletButton() -> impl IntoView {
                                 {move || player_info().map(|p| {
                                     view! {
                                         <span class="player-name">
-                                            {p.username.unwrap_or_else(|| "Anonymous Ninja".to_string())}
+                                            {p.username.unwrap_or_else(|| "Wandering Hero".to_string())}
                                         </span>
                                     }
                                 })}
@@ -116,7 +116,7 @@ pub fn ConnectWalletButton() -> impl IntoView {
                 if is_new_player() {
                     Some(view! {
                         <div class="new-player-welcome">
-                            <p>"🎉 Welcome, new ninja! Your account has been created."</p>
+                            <p>"🎉 Welcome, brave adventurer! Your quest begins now."</p>
                         </div>
                     })
                 } else {

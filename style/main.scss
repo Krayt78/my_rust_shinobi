@@ -1,29 +1,30 @@
 // ==========================================
-// RUST SHINOBI - Main Stylesheet
+// REALM OF LEGENDS - Main Stylesheet
+// Fantasy RPG Theme
 // ==========================================
 
-// Color Variables - Dark Ninja Theme
-$bg-dark: #0a0a0f;
-$bg-darker: #050508;
-$bg-panel: #12121a;
-$bg-panel-hover: #1a1a25;
+// Color Variables - Dark Fantasy Theme
+$bg-dark: #0d0d12;
+$bg-darker: #08080c;
+$bg-panel: #14141c;
+$bg-panel-hover: #1c1c28;
 $border-color: #2a2a3a;
-$border-accent: #e6007a;
+$border-accent: #c9a227;
 
 $text-primary: #e8e8f0;
 $text-secondary: #9090a0;
 $text-muted: #606070;
 
-$accent-primary: #e6007a;  // Polkadot pink
-$accent-secondary: #552bbf; // Purple
+$accent-primary: #c9a227;  // Fantasy gold
+$accent-secondary: #7b2cbf; // Royal purple
 $accent-gold: #f5a623;
-$accent-red: #e74c3c;
-$accent-blue: #3498db;
-$accent-green: #2ecc71;
+$accent-red: #c41e3a;
+$accent-blue: #0070dd;
+$accent-green: #1eff00;
 
-// Typography
-$font-display: 'Orbitron', sans-serif;
-$font-body: 'Rajdhani', sans-serif;
+// Typography - Fantasy Fonts
+$font-display: 'Cinzel', serif;
+$font-body: 'Almendra', serif;
 
 // Global Reset & Base
 * {
@@ -65,11 +66,21 @@ html, body {
     padding: 0 1.5rem;
     height: 60px;
     background: linear-gradient(180deg, $bg-panel 0%, rgba($bg-panel, 0.95) 100%);
-    border-bottom: 1px solid $border-color;
+    border-bottom: 2px solid $border-color;
     position: sticky;
     top: 0;
     z-index: 100;
     backdrop-filter: blur(10px);
+    
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, $accent-primary, transparent);
+    }
 }
 
 .nav-logo {
@@ -87,11 +98,12 @@ html, body {
         font-family: $font-display;
         font-size: 1.25rem;
         font-weight: 700;
-        background: linear-gradient(135deg, $accent-primary, $accent-secondary);
+        background: linear-gradient(135deg, $accent-primary, $accent-gold);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        letter-spacing: 1px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
     }
 }
 
@@ -165,6 +177,17 @@ html, body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    position: relative;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba($accent-primary, 0.3), transparent);
+    }
 }
 
 .panel-title {
@@ -387,7 +410,7 @@ html, body {
 }
 
 // ==========================================
-// VILLAGE MAP
+// KINGDOM MAP
 // ==========================================
 .village-map-container {
     flex: 1;
@@ -457,6 +480,8 @@ html, body {
     pointer-events: auto;
     cursor: pointer;
     transition: all 0.2s ease;
+    background: none;
+    border: none;
     
     &:hover {
         transform: translate(-50%, -50%) scale(1.15);
@@ -523,7 +548,7 @@ html, body {
 }
 
 // ==========================================
-// VILLAGE CHAT
+// TAVERN CHAT
 // ==========================================
 .village-chat {
     height: 280px;
@@ -615,7 +640,7 @@ html, body {
     }
     
     &.rank-jonin {
-        border-left-color: $accent-primary;
+        border-left-color: $accent-secondary;
     }
     
     &.rank-chunin {
@@ -642,7 +667,7 @@ html, body {
         }
         
         &.rank-jonin {
-            color: $accent-primary;
+            color: $accent-secondary;
         }
         
         &.rank-chunin {
@@ -706,7 +731,7 @@ html, body {
         border: none;
         border-radius: 6px;
         color: white;
-        font-family: $font-body;
+        font-family: $font-display;
         font-weight: 600;
         font-size: 0.85rem;
         cursor: pointer;
@@ -739,7 +764,7 @@ html, body {
         font-family: $font-display;
         font-size: 2rem;
         margin-bottom: 0.5rem;
-        background: linear-gradient(135deg, $accent-primary, $accent-secondary);
+        background: linear-gradient(135deg, $accent-primary, $accent-gold);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -1051,20 +1076,20 @@ html, body {
         flex-shrink: 0;
     }
     
-    // Category colors
-    &.category-taijutsu {
+    // Fantasy Category colors
+    &.category-melee {
         border-left: 3px solid #e74c3c;
         .action-desc { color: #e74c3c; }
     }
     
-    &.category-ninjutsu {
-        border-left: 3px solid #3498db;
-        .action-desc { color: #3498db; }
-    }
-    
-    &.category-genjutsu {
+    &.category-magic {
         border-left: 3px solid #9b59b6;
         .action-desc { color: #9b59b6; }
+    }
+    
+    &.category-ranged {
+        border-left: 3px solid #3498db;
+        .action-desc { color: #3498db; }
     }
     
     &.category-combat {
@@ -1097,7 +1122,7 @@ html, body {
         .action-desc { color: #e91e63; }
     }
     
-    &.category-training {
+    &.category-craft {
         border-left: 3px solid #ff9800;
         .action-desc { color: #ff9800; }
     }
@@ -1240,7 +1265,7 @@ html, body {
 }
 
 // ==========================================
-// WALLET COMPONENTS (Updated)
+// WALLET COMPONENTS
 // ==========================================
 .wallet-container {
     display: flex;
@@ -1254,7 +1279,7 @@ html, body {
     border: none;
     padding: 0.6rem 1.25rem;
     border-radius: 8px;
-    font-family: $font-body;
+    font-family: $font-display;
     font-weight: 600;
     font-size: 0.9rem;
     cursor: pointer;
@@ -1383,7 +1408,7 @@ html, body {
 // CHARACTER PAGE
 // ==========================================
 
-// Rarity Colors
+// Rarity Colors (WoW-style)
 $rarity-common: #9d9d9d;
 $rarity-uncommon: #1eff00;
 $rarity-rare: #0070dd;

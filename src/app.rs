@@ -22,10 +22,10 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 <AutoReload options=options.clone() />
                 <HydrationScripts options/>
                 <MetaTags/>
-                // Google Fonts for ninja-style typography
+                // Google Fonts for fantasy-style typography
                 <link rel="preconnect" href="https://fonts.googleapis.com"/>
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
-                <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+                <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Almendra:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet"/>
                 // Bundled Polkadot wallet JavaScript
                 <script src="/wallet.js"></script>
             </head>
@@ -43,7 +43,7 @@ pub fn App() -> impl IntoView {
 
     view! {
         <Stylesheet id="leptos" href="/pkg/my_rust_shinobi.css"/>
-        <Title text="My Rust Shinobi"/>
+        <Title text="Realm of Legends"/>
         
         <WalletProvider>
             <Router>

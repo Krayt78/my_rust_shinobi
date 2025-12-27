@@ -13,17 +13,19 @@ pub struct Location {
     pub description: &'static str,
 }
 
-/// Available locations in the village
+/// Available locations in the kingdom
 const LOCATIONS: &[Location] = &[
-    Location { id: "village_square", name: "Village Square", icon: "🏯", description: "The center of the village" },
-    Location { id: "academy", name: "Academy", icon: "📚", description: "Learn new jutsu" },
-    Location { id: "hokage_tower", name: "Hokage Tower", icon: "🏛️", description: "Village headquarters" },
-    Location { id: "hospital", name: "Hospital", icon: "🏥", description: "Heal your wounds" },
-    Location { id: "hot_springs", name: "Hot Springs", icon: "♨️", description: "Rest and recover" },
-    Location { id: "training", name: "Training Ground", icon: "🎯", description: "Train your skills" },
-    Location { id: "market", name: "Market", icon: "🛒", description: "Buy & sell items" },
-    Location { id: "arena", name: "Arena", icon: "⚔️", description: "PvP battles" },
-    Location { id: "gates", name: "Village Gates", icon: "🚪", description: "Leave village" },
+    Location { id: "town_square", name: "Town Square", icon: "🏰", description: "The heart of the town" },
+    Location { id: "guild_hall", name: "Adventurer's Guild", icon: "⚔️", description: "Accept quests" },
+    Location { id: "castle", name: "Castle", icon: "👑", description: "The royal court" },
+    Location { id: "temple", name: "Temple", icon: "⛪", description: "Heal and pray" },
+    Location { id: "tavern", name: "Tavern", icon: "🍺", description: "Rest and rumors" },
+    Location { id: "training", name: "Training Grounds", icon: "🎯", description: "Hone your skills" },
+    Location { id: "market", name: "Marketplace", icon: "🛒", description: "Buy & sell goods" },
+    Location { id: "arena", name: "Colosseum", icon: "🏟️", description: "PvP battles" },
+    Location { id: "gates", name: "Town Gates", icon: "🚪", description: "Leave town" },
+    Location { id: "wizard_tower", name: "Wizard Tower", icon: "🗼", description: "Learn magic" },
+    Location { id: "blacksmith", name: "Blacksmith", icon: "🔨", description: "Forge equipment" },
 ];
 
 fn get_location(id: &str) -> Option<&'static Location> {
@@ -34,7 +36,7 @@ fn get_location(id: &str) -> Option<&'static Location> {
 #[component]
 pub fn HomePage() -> impl IntoView {
     // Shared state for current location
-    let current_location = RwSignal::new("village_square".to_string());
+    let current_location = RwSignal::new("town_square".to_string());
     provide_context(current_location);
     
     view! {
@@ -75,14 +77,14 @@ fn CharacterPanel() -> impl IntoView {
                             // Character Avatar
                             <div class="character-avatar">
                                 <div class="avatar-frame">
-                                    <div class="avatar-placeholder">"🥷"</div>
+                                    <div class="avatar-placeholder">"🧙‍♂️"</div>
                                 </div>
                                 <div class="character-name">
                                     {move || player_info()
                                         .and_then(|p| p.username)
-                                        .unwrap_or_else(|| "Anonymous Ninja".to_string())}
+                                        .unwrap_or_else(|| "Wandering Hero".to_string())}
                                 </div>
-                                <div class="character-rank">"Genin"</div>
+                                <div class="character-rank">"Adventurer"</div>
                             </div>
                             
                             // Character Stats
@@ -97,9 +99,9 @@ fn CharacterPanel() -> impl IntoView {
                                     color="#e74c3c"
                                 />
                                 
-                                // Chakra Bar
+                                // Mana Bar
                                 <StatBar 
-                                    label="Chakra" 
+                                    label="Mana" 
                                     current=50 
                                     max=50 
                                     color="#3498db"
@@ -121,8 +123,8 @@ fn CharacterPanel() -> impl IntoView {
                                         <span class="attr-value">"10"</span>
                                     </div>
                                     <div class="attribute">
-                                        <span class="attr-icon">"⚡"</span>
-                                        <span class="attr-name">"Agility"</span>
+                                        <span class="attr-icon">"🏃"</span>
+                                        <span class="attr-name">"Dexterity"</span>
                                         <span class="attr-value">"10"</span>
                                     </div>
                                     <div class="attribute">
@@ -152,7 +154,7 @@ fn CharacterPanel() -> impl IntoView {
     }
 }
 
-/// Center Panel - Village Map and Chat
+/// Center Panel - Kingdom Map and Chat
 #[component]
 fn CenterContent() -> impl IntoView {
     let wallet = use_wallet();
@@ -164,17 +166,17 @@ fn CenterContent() -> impl IntoView {
                 if !is_connected() {
                     view! {
                         <div class="welcome-screen">
-                            <div class="welcome-icon">"🏯"</div>
-                            <h1>"Welcome to Rust Shinobi"</h1>
-                            <p>"Connect your wallet to begin your ninja journey"</p>
+                            <div class="welcome-icon">"🏰"</div>
+                            <h1>"Welcome to the Realm"</h1>
+                            <p>"Connect your wallet to begin your adventure"</p>
                             <div class="features">
                                 <div class="feature">
                                     <span class="feature-icon">"⚔️"</span>
-                                    <span>"Battle other ninjas"</span>
+                                    <span>"Battle fierce monsters"</span>
                                 </div>
                                 <div class="feature">
                                     <span class="feature-icon">"📜"</span>
-                                    <span>"Complete missions"</span>
+                                    <span>"Complete epic quests"</span>
                                 </div>
                                 <div class="feature">
                                     <span class="feature-icon">"🏴"</span>
@@ -186,11 +188,11 @@ fn CenterContent() -> impl IntoView {
                 } else {
                     view! {
                         <>
-                            // Village Map (Top)
-                            <VillageMap />
+                            // Kingdom Map (Top)
+                            <KingdomMap />
                             
                             // Chat (Bottom)
-                            <VillageChat />
+                            <TavernChat />
                         </>
                     }.into_any()
                 }
@@ -199,9 +201,9 @@ fn CenterContent() -> impl IntoView {
     }
 }
 
-/// Village Map with clickable locations overlaid on background image
+/// Kingdom Map with clickable locations overlaid on background image
 #[component]
-fn VillageMap() -> impl IntoView {
+fn KingdomMap() -> impl IntoView {
     let current_location = expect_context::<RwSignal<String>>();
     let location_name = move || {
         get_location(&current_location.get())
@@ -212,7 +214,7 @@ fn VillageMap() -> impl IntoView {
     view! {
         <div class="village-map-container">
             <div class="map-header">
-                <h2 class="map-title">"🏯 Konoha Village"</h2>
+                <h2 class="map-title">"🏰 Eldoria Kingdom"</h2>
                 <span class="map-location">"📍 " {location_name}</span>
             </div>
             
@@ -220,39 +222,53 @@ fn VillageMap() -> impl IntoView {
                 // Background image
                 <img 
                     src="/images/starting village.png" 
-                    alt="Village Map" 
+                    alt="Kingdom Map" 
                     class="village-map-bg"
                 />
                 
                 // Clickable location overlays
                 <div class="map-locations-overlay">
                     <MapLocationOverlay 
-                        id="hokage_tower"
-                        name="Hokage Tower" 
-                        icon="🏛️" 
+                        id="castle"
+                        name="Castle" 
+                        icon="👑" 
                         top="15%"
                         left="50%"
                     />
                     <MapLocationOverlay 
-                        id="academy"
-                        name="Academy" 
-                        icon="📚" 
+                        id="wizard_tower"
+                        name="Wizard Tower" 
+                        icon="🗼" 
+                        top="22%"
+                        left="25%"
+                    />
+                    <MapLocationOverlay 
+                        id="guild_hall"
+                        name="Guild Hall" 
+                        icon="⚔️" 
                         top="25%"
-                        left="20%"
+                        left="75%"
                     />
                     <MapLocationOverlay 
-                        id="hospital"
-                        name="Hospital" 
-                        icon="🏥" 
-                        top="20%"
-                        left="80%"
-                    />
-                    <MapLocationOverlay 
-                        id="hot_springs"
-                        name="Hot Springs" 
-                        icon="♨️" 
-                        top="50%"
+                        id="temple"
+                        name="Temple" 
+                        icon="⛪" 
+                        top="40%"
                         left="15%"
+                    />
+                    <MapLocationOverlay 
+                        id="tavern"
+                        name="Tavern" 
+                        icon="🍺" 
+                        top="50%"
+                        left="35%"
+                    />
+                    <MapLocationOverlay 
+                        id="blacksmith"
+                        name="Blacksmith" 
+                        icon="🔨" 
+                        top="55%"
+                        left="65%"
                     />
                     <MapLocationOverlay 
                         id="training"
@@ -266,14 +282,14 @@ fn VillageMap() -> impl IntoView {
                         name="Market" 
                         icon="🛒" 
                         top="70%"
-                        left="25%"
+                        left="30%"
                     />
                     <MapLocationOverlay 
                         id="arena"
-                        name="Arena" 
-                        icon="⚔️" 
-                        top="75%"
-                        left="50%"
+                        name="Colosseum" 
+                        icon="🏟️" 
+                        top="70%"
+                        left="60%"
                     />
                     <MapLocationOverlay 
                         id="gates"
@@ -312,45 +328,45 @@ fn MapLocationOverlay(
     }
 }
 
-/// Village Chat component
+/// Tavern Chat component
 #[component]
-fn VillageChat() -> impl IntoView {
+fn TavernChat() -> impl IntoView {
     let chat_input = RwSignal::new(String::new());
     
     view! {
         <div class="village-chat">
             <div class="chat-header">
                 <span class="chat-icon">"💬"</span>
-                <span class="chat-title">"Village Chat"</span>
+                <span class="chat-title">"Tavern Chat"</span>
                 <div class="chat-tabs">
                     <button class="chat-tab active">"Global"</button>
                     <button class="chat-tab">"Guild"</button>
-                    <button class="chat-tab">"Private"</button>
+                    <button class="chat-tab">"Whisper"</button>
                 </div>
             </div>
             
             <div class="chat-messages">
                 <ChatMessage 
-                    username="ShadowBlade" 
-                    message="Anyone want to team up for the forest mission?" 
+                    username="Thorin" 
+                    message="Anyone want to raid the dragon's lair?" 
                     time="2m ago"
-                    rank="Chunin"
+                    rank="Knight"
                 />
                 <ChatMessage 
-                    username="FireFist" 
-                    message="I just got a legendary kunai! 🎉" 
+                    username="Elara" 
+                    message="I just found a legendary sword! ⚔️" 
                     time="5m ago"
-                    rank="Jonin"
+                    rank="Archmage"
                 />
                 <ChatMessage 
-                    username="WindRunner" 
-                    message="The arena event starts in 30 minutes" 
+                    username="Finn" 
+                    message="The tournament starts in 30 minutes" 
                     time="8m ago"
-                    rank="Genin"
+                    rank="Squire"
                 />
                 <ChatMessage 
-                    username="System" 
-                    message="Welcome to Konoha! New players can visit the Academy for tutorials." 
+                    username="Herald" 
+                    message="Welcome to Eldoria! New adventurers can visit the Guild Hall for quests." 
                     time="10m ago"
                     rank="System"
                 />
@@ -380,8 +396,8 @@ fn ChatMessage(
 ) -> impl IntoView {
     let rank_class = match rank {
         "System" => "rank-system",
-        "Jonin" => "rank-jonin",
-        "Chunin" => "rank-chunin",
+        "Archmage" => "rank-jonin",
+        "Knight" => "rank-chunin",
         _ => "rank-genin",
     };
     
@@ -448,165 +464,283 @@ fn LocationActionsPanel() -> impl IntoView {
 #[component]
 fn LocationActions(location_id: String) -> impl IntoView {
     match location_id.as_str() {
-        "academy" => view! {
+        "guild_hall" => view! {
             <ActionButton 
-                name="Physical Training" 
-                description="Train Taijutsu" 
-                cost="1 PA" 
-                icon="💪"
-                category="taijutsu"
-            />
-            <ActionButton 
-                name="Ninjutsu Class" 
-                description="Learn ninjutsu techniques" 
-                cost="1 PA" 
-                icon="🔥"
-                category="ninjutsu"
-            />
-            <ActionButton 
-                name="Genjutsu Class" 
-                description="Study illusion arts" 
-                cost="1 PA" 
-                icon="👁️"
-                category="genjutsu"
-            />
-            <ActionButton 
-                name="Spar" 
-                description="Practice combat" 
-                cost="Free" 
-                icon="⚔️"
-                category="combat"
-            />
-            <ActionButton 
-                name="Study Tactics" 
-                description="Learn combat strategies" 
-                cost="Free" 
-                icon="📖"
-                category="knowledge"
-            />
-        }.into_any(),
-        
-        "hokage_tower" => view! {
-            <ActionButton 
-                name="Request Mission" 
-                description="Get a new mission" 
+                name="Accept Quest" 
+                description="Browse available quests" 
                 cost="Free" 
                 icon="📜"
                 category="mission"
             />
             <ActionButton 
-                name="Report Mission" 
-                description="Complete mission" 
+                name="Turn In Quest" 
+                description="Complete a quest" 
                 cost="Free" 
                 icon="✅"
                 category="mission"
             />
             <ActionButton 
-                name="Village Council" 
-                description="View village affairs" 
+                name="Guild Board" 
+                description="View guild rankings" 
                 cost="Free" 
-                icon="🏛️"
+                icon="📋"
+                category="social"
+            />
+            <ActionButton 
+                name="Party Finder" 
+                description="Find adventuring party" 
+                cost="Free" 
+                icon="👥"
                 category="social"
             />
         }.into_any(),
         
-        "hospital" => view! {
+        "wizard_tower" => view! {
+            <ActionButton 
+                name="Study Fire Magic" 
+                description="Learn fire spells" 
+                cost="1 AP" 
+                icon="🔥"
+                category="magic"
+            />
+            <ActionButton 
+                name="Study Ice Magic" 
+                description="Learn frost spells" 
+                cost="1 AP" 
+                icon="❄️"
+                category="magic"
+            />
+            <ActionButton 
+                name="Study Lightning" 
+                description="Learn storm spells" 
+                cost="1 AP" 
+                icon="⚡"
+                category="magic"
+            />
+            <ActionButton 
+                name="Enchant Item" 
+                description="Add magic to equipment" 
+                cost="50 Gold" 
+                icon="✨"
+                category="craft"
+            />
+            <ActionButton 
+                name="Identify Item" 
+                description="Reveal item properties" 
+                cost="10 Gold" 
+                icon="🔍"
+                category="knowledge"
+            />
+        }.into_any(),
+        
+        "castle" => view! {
+            <ActionButton 
+                name="Audience with King" 
+                description="Request royal quest" 
+                cost="Free" 
+                icon="👑"
+                category="mission"
+            />
+            <ActionButton 
+                name="Royal Treasury" 
+                description="Exchange rare items" 
+                cost="Free" 
+                icon="💎"
+                category="shop"
+            />
+            <ActionButton 
+                name="War Council" 
+                description="View kingdom affairs" 
+                cost="Free" 
+                icon="🗺️"
+                category="knowledge"
+            />
+            <ActionButton 
+                name="Knight's Order" 
+                description="Join the knights" 
+                cost="Free" 
+                icon="🛡️"
+                category="social"
+            />
+        }.into_any(),
+        
+        "temple" => view! {
             <ActionButton 
                 name="Heal Wounds" 
                 description="Restore HP" 
-                cost="50 Ryo" 
-                icon="💊"
+                cost="25 Gold" 
+                icon="💚"
                 category="heal"
             />
             <ActionButton 
-                name="Full Recovery" 
-                description="Restore HP & Chakra" 
-                cost="100 Ryo" 
-                icon="🏥"
+                name="Full Restoration" 
+                description="Restore HP & Mana" 
+                cost="50 Gold" 
+                icon="✝️"
                 category="heal"
             />
             <ActionButton 
-                name="Medical Training" 
-                description="Learn medical jutsu" 
-                cost="1 PA" 
-                icon="🩹"
-                category="ninjutsu"
+                name="Remove Curse" 
+                description="Cure afflictions" 
+                cost="100 Gold" 
+                icon="🙏"
+                category="heal"
+            />
+            <ActionButton 
+                name="Learn Holy Magic" 
+                description="Divine spells" 
+                cost="1 AP" 
+                icon="☀️"
+                category="magic"
+            />
+            <ActionButton 
+                name="Donate" 
+                description="Gain blessings" 
+                cost="Variable" 
+                icon="🪙"
+                category="social"
             />
         }.into_any(),
         
-        "hot_springs" => view! {
+        "tavern" => view! {
             <ActionButton 
-                name="Relax" 
-                description="Recover chakra slowly" 
-                cost="Free" 
-                icon="♨️"
+                name="Rest" 
+                description="Recover over time" 
+                cost="5 Gold" 
+                icon="🛏️"
                 category="rest"
             />
             <ActionButton 
-                name="Meditate" 
-                description="Increase chakra regen" 
-                cost="1 PA" 
-                icon="🧘"
-                category="training"
+                name="Buy a Drink" 
+                description="Hear rumors" 
+                cost="2 Gold" 
+                icon="🍺"
+                category="social"
             />
             <ActionButton 
-                name="Socialize" 
-                description="Meet other ninjas" 
-                cost="Free" 
-                icon="💬"
+                name="Gamble" 
+                description="Try your luck" 
+                cost="Variable" 
+                icon="🎲"
                 category="social"
+            />
+            <ActionButton 
+                name="Recruit Mercenary" 
+                description="Hire help" 
+                cost="50 Gold" 
+                icon="💂"
+                category="social"
+            />
+            <ActionButton 
+                name="Bard's Tale" 
+                description="Gain inspiration" 
+                cost="Free" 
+                icon="🎵"
+                category="rest"
             />
         }.into_any(),
         
         "training" => view! {
             <ActionButton 
-                name="Physical Training" 
-                description="Increase Strength" 
-                cost="1 PA" 
+                name="Strength Training" 
+                description="Increase STR" 
+                cost="1 AP" 
                 icon="💪"
-                category="taijutsu"
+                category="melee"
             />
             <ActionButton 
-                name="Speed Training" 
-                description="Increase Agility" 
-                cost="1 PA" 
-                icon="⚡"
-                category="taijutsu"
+                name="Agility Training" 
+                description="Increase DEX" 
+                cost="1 AP" 
+                icon="🏃"
+                category="melee"
             />
             <ActionButton 
-                name="Chakra Control" 
-                description="Increase max chakra" 
-                cost="1 PA" 
-                icon="🔵"
-                category="ninjutsu"
-            />
-            <ActionButton 
-                name="Target Practice" 
-                description="Improve accuracy" 
-                cost="1 PA" 
-                icon="🎯"
+                name="Combat Practice" 
+                description="Improve skills" 
+                cost="1 AP" 
+                icon="⚔️"
                 category="combat"
+            />
+            <ActionButton 
+                name="Archery Range" 
+                description="Ranged training" 
+                cost="1 AP" 
+                icon="🏹"
+                category="ranged"
+            />
+            <ActionButton 
+                name="Sparring Match" 
+                description="Practice combat" 
+                cost="Free" 
+                icon="🤺"
+                category="combat"
+            />
+        }.into_any(),
+        
+        "blacksmith" => view! {
+            <ActionButton 
+                name="Forge Weapon" 
+                description="Create weapons" 
+                cost="Materials" 
+                icon="⚔️"
+                category="craft"
+            />
+            <ActionButton 
+                name="Forge Armor" 
+                description="Create armor" 
+                cost="Materials" 
+                icon="🛡️"
+                category="craft"
+            />
+            <ActionButton 
+                name="Repair Equipment" 
+                description="Fix damaged gear" 
+                cost="Variable" 
+                icon="🔧"
+                category="craft"
+            />
+            <ActionButton 
+                name="Upgrade Item" 
+                description="Enhance equipment" 
+                cost="Gold + Mats" 
+                icon="⬆️"
+                category="craft"
+            />
+            <ActionButton 
+                name="Salvage" 
+                description="Break down items" 
+                cost="Free" 
+                icon="♻️"
+                category="craft"
             />
         }.into_any(),
         
         "market" => view! {
             <ActionButton 
                 name="Buy Items" 
-                description="Purchase equipment" 
+                description="Purchase goods" 
                 cost="Free" 
                 icon="🛒"
                 category="shop"
             />
             <ActionButton 
                 name="Sell Items" 
-                description="Sell your items" 
+                description="Sell your loot" 
                 cost="Free" 
                 icon="💰"
                 category="shop"
             />
             <ActionButton 
+                name="Auction House" 
+                description="Player market" 
+                cost="Free" 
+                icon="🏛️"
+                category="shop"
+            />
+            <ActionButton 
                 name="Black Market" 
-                description="Rare items..." 
+                description="Rare goods..." 
                 cost="Free" 
                 icon="🕶️"
                 category="shop"
@@ -615,7 +749,7 @@ fn LocationActions(location_id: String) -> impl IntoView {
         
         "arena" => view! {
             <ActionButton 
-                name="Quick Match" 
+                name="Quick Duel" 
                 description="Fight random opponent" 
                 cost="Free" 
                 icon="⚔️"
@@ -624,7 +758,7 @@ fn LocationActions(location_id: String) -> impl IntoView {
             <ActionButton 
                 name="Ranked Battle" 
                 description="Competitive match" 
-                cost="1 PA" 
+                cost="1 AP" 
                 icon="🏆"
                 category="combat"
             />
@@ -633,6 +767,13 @@ fn LocationActions(location_id: String) -> impl IntoView {
                 description="Join tournament" 
                 cost="Entry Fee" 
                 icon="👑"
+                category="combat"
+            />
+            <ActionButton 
+                name="Monster Arena" 
+                description="Fight beasts" 
+                cost="10 Gold" 
+                icon="🐉"
                 category="combat"
             />
             <ActionButton 
@@ -646,29 +787,36 @@ fn LocationActions(location_id: String) -> impl IntoView {
         
         "gates" => view! {
             <ActionButton 
-                name="Patrol Mission" 
-                description="Guard the gates" 
-                cost="1 PA" 
+                name="Guard Duty" 
+                description="Earn gold" 
+                cost="1 AP" 
                 icon="🛡️"
                 category="mission"
             />
             <ActionButton 
-                name="Leave Village" 
-                description="Go on expedition" 
+                name="Leave Town" 
+                description="Go adventuring" 
                 cost="Free" 
                 icon="🚪"
                 category="travel"
             />
             <ActionButton 
                 name="World Map" 
-                description="View other locations" 
+                description="View regions" 
                 cost="Free" 
                 icon="🗺️"
                 category="travel"
             />
+            <ActionButton 
+                name="Caravan" 
+                description="Fast travel" 
+                cost="20 Gold" 
+                icon="🐴"
+                category="travel"
+            />
         }.into_any(),
         
-        // Village Square (default)
+        // Town Square (default)
         _ => view! {
             <ActionButton 
                 name="Rest" 
@@ -685,8 +833,15 @@ fn LocationActions(location_id: String) -> impl IntoView {
                 category="social"
             />
             <ActionButton 
-                name="Check Missions" 
-                description="View active missions" 
+                name="Town Crier" 
+                description="Hear announcements" 
+                cost="Free" 
+                icon="📢"
+                category="knowledge"
+            />
+            <ActionButton 
+                name="Bounty Board" 
+                description="View wanted posters" 
                 cost="Free" 
                 icon="📋"
                 category="mission"

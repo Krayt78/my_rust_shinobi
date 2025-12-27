@@ -894,7 +894,7 @@ html, body {
 }
 
 // ==========================================
-// RIGHT PANEL - QUICK ACTIONS
+// RIGHT PANEL - LOCATION ACTIONS
 // ==========================================
 .right-panel {
     display: flex;
@@ -906,6 +906,229 @@ html, body {
     }
 }
 
+// Location Actions Panel
+.location-actions-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.location-header {
+    padding: 1rem;
+    background: rgba($bg-darker, 0.5);
+    border-bottom: 1px solid $border-color;
+    text-align: center;
+}
+
+.location-image {
+    width: 100%;
+    height: 120px;
+    background: linear-gradient(135deg, rgba($accent-primary, 0.1), rgba($accent-secondary, 0.1));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+    border: 1px solid $border-color;
+    
+    .location-icon-large {
+        font-size: 3.5rem;
+    }
+}
+
+.location-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    
+    .location-marker-text {
+        color: $accent-green;
+        font-size: 0.85rem;
+    }
+    
+    .location-name-text {
+        font-family: $font-display;
+        font-size: 1rem;
+        font-weight: 600;
+        color: $text-primary;
+    }
+}
+
+.location-actions {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: $bg-darker;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: $border-color;
+        border-radius: 2px;
+    }
+}
+
+.action-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background: rgba($bg-darker, 0.5);
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    width: 100%;
+    
+    &:hover {
+        background: rgba($accent-primary, 0.1);
+        border-color: $accent-primary;
+        transform: translateX(4px);
+        
+        .action-icon {
+            transform: scale(1.1);
+        }
+    }
+    
+    .action-main {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .action-icon {
+        font-size: 1.25rem;
+        transition: transform 0.2s;
+        flex-shrink: 0;
+    }
+    
+    .action-text {
+        display: flex;
+        flex-direction: column;
+        gap: 0.1rem;
+        min-width: 0;
+        
+        .action-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: $text-primary;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .action-desc {
+            font-size: 0.7rem;
+            color: $text-muted;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+    
+    .action-cost {
+        font-family: $font-display;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        background: rgba($bg-darker, 0.8);
+        color: $accent-gold;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    
+    // Category colors
+    &.category-taijutsu {
+        border-left: 3px solid #e74c3c;
+        .action-desc { color: #e74c3c; }
+    }
+    
+    &.category-ninjutsu {
+        border-left: 3px solid #3498db;
+        .action-desc { color: #3498db; }
+    }
+    
+    &.category-genjutsu {
+        border-left: 3px solid #9b59b6;
+        .action-desc { color: #9b59b6; }
+    }
+    
+    &.category-combat {
+        border-left: 3px solid #e67e22;
+        .action-desc { color: #e67e22; }
+    }
+    
+    &.category-mission {
+        border-left: 3px solid #f1c40f;
+        .action-desc { color: #f1c40f; }
+    }
+    
+    &.category-heal {
+        border-left: 3px solid #2ecc71;
+        .action-desc { color: #2ecc71; }
+    }
+    
+    &.category-shop {
+        border-left: 3px solid #1abc9c;
+        .action-desc { color: #1abc9c; }
+    }
+    
+    &.category-rest {
+        border-left: 3px solid #95a5a6;
+        .action-desc { color: #95a5a6; }
+    }
+    
+    &.category-social {
+        border-left: 3px solid #e91e63;
+        .action-desc { color: #e91e63; }
+    }
+    
+    &.category-training {
+        border-left: 3px solid #ff9800;
+        .action-desc { color: #ff9800; }
+    }
+    
+    &.category-travel {
+        border-left: 3px solid #00bcd4;
+        .action-desc { color: #00bcd4; }
+    }
+    
+    &.category-knowledge {
+        border-left: 3px solid #607d8b;
+        .action-desc { color: #607d8b; }
+    }
+}
+
+// Active location on map
+.map-location-overlay {
+    &.active {
+        .location-marker-icon {
+            border-color: $accent-primary;
+            box-shadow: 0 0 20px rgba($accent-primary, 0.8);
+            animation: pulse-glow 1.5s ease-in-out infinite;
+        }
+        
+        .location-label {
+            background: rgba($accent-primary, 0.9);
+        }
+    }
+}
+
+// Legacy styles (keeping for compatibility)
 .quick-actions {
     display: grid;
     grid-template-columns: 1fr 1fr;

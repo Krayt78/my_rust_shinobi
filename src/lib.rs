@@ -1,7 +1,11 @@
+//! My Rust Shinobi - A ninja-themed web game built with Leptos
+
 pub mod app;
-pub mod wallet;
-pub mod db;
 pub mod api;
+pub mod components;
+pub mod db;
+pub mod pages;
+pub mod wallet;
 
 #[cfg(feature = "hydrate")]
 #[wasm_bindgen::prelude::wasm_bindgen]

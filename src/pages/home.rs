@@ -1,5 +1,6 @@
 //! Home page - The main dashboard for players
 
+use crate::api::{get_location_by_id, get_town_by_id, get_locations_by_town, LocationInfo, TownInfo};
 use crate::components::StatBar;
 use crate::wallet::context::use_wallet;
 use leptos::prelude::*;
@@ -94,6 +95,25 @@ pub fn HomePage() -> impl IntoView {
     let current_location = RwSignal::new("town_square".to_string());
     provide_context(current_location);
 
+    // Fetch location from database using server function
+    // The location ID: b0000000-0000-0000-0000-000000000001
+    let location_id = "b0000000-0000-0000-0000-000000000001".to_string();
+    let location_id_for_resource = location_id.clone();
+    
+    // Use Resource to fetch location data asynchronously
+    let location_resource = Resource::new(
+        move || location_id_for_resource.clone(),
+        move |id: String| {
+            let id = id.clone();
+            async move {
+                get_location_by_id(id).await
+            }
+        },
+    );
+
+    // No Effect needed! The Resource will automatically trigger updates
+    // when the data loads. Components that use it will reactively update.
+
     view! {
         <div class="three-column-layout">
             // Left Panel - Character Stats (25%)
@@ -103,7 +123,7 @@ pub fn HomePage() -> impl IntoView {
 
             // Center Panel - Main Content (50%)
             <section class="panel center-panel">
-                <CenterContent />
+                <CenterContent location_id=location_id />
             </section>
 
             // Right Panel - Location Actions (25%)
@@ -209,11 +229,12 @@ fn CharacterPanel() -> impl IntoView {
     }
 }
 
-/// Center Panel - Kingdom Map and Chat
+/// Center Panel - Kingdom Map and Chat  
 #[component]
-fn CenterContent() -> impl IntoView {
+fn CenterContent(location_id: String) -> impl IntoView {
     let wallet = use_wallet();
     let is_connected = move || wallet.get().connected;
+    let location_id_clone = location_id.clone();
 
     view! {
         <div class="center-content-split">
@@ -244,7 +265,7 @@ fn CenterContent() -> impl IntoView {
                     view! {
                         <>
                             // Kingdom Map (Top)
-                            <KingdomMap />
+                            <KingdomMap location_id=location_id_clone.clone() />
 
                             // Chat (Bottom)
                             <TavernChat />
@@ -258,101 +279,120 @@ fn CenterContent() -> impl IntoView {
 
 /// Kingdom Map with clickable locations overlaid on background image
 #[component]
-fn KingdomMap() -> impl IntoView {
-    let current_location = expect_context::<RwSignal<String>>();
-    let location_name = move || {
-        get_location(&current_location.get())
-            .map(|l| l.name)
-            .unwrap_or("Unknown")
-    };
-
+fn KingdomMap(location_id: String) -> impl IntoView {
+    // Create resource to fetch location
+    let location_resource = Resource::new(
+        move || location_id.clone(),
+        move |id: String| {
+            let id = id.clone();
+            async move {
+                get_location_by_id(id).await
+            }
+        },
+    );
+    
+    // Create a signal to track town_id, updated when location loads
+    let town_id_signal = RwSignal::new(None::<String>);
+    
+    // Create a resource that depends on the town_id signal
+    let town_resource = Resource::new(
+        move || town_id_signal.get(),
+        move |town_id: Option<String>| {
+            async move {
+                if let Some(town_id) = town_id {
+                    get_town_by_id(town_id).await
+                } else {
+                    Ok(None)
+                }
+            }
+        },
+    );
+    
+    // Create a resource to fetch locations for the town
+    let locations_resource = Resource::new(
+        move || town_id_signal.get(),
+        move |town_id: Option<String>| {
+            async move {
+                if let Some(town_id) = town_id {
+                    get_locations_by_town(town_id).await
+                } else {
+                    Ok(Vec::new())
+                }
+            }
+        },
+    );
+    
     view! {
         <div class="village-map-container">
             <div class="map-header">
-                <h2 class="map-title">"🏰 Eldoria Kingdom"</h2>
-                <span class="map-location">"📍 " {location_name}</span>
+                <h2 class="map-title">
+                    {move || {
+                        match town_resource.get() {
+                            Some(Ok(Some(town))) => format!("🏰 {}", town.name),
+                            _ => "🏰 Default Kingdom".to_string(),
+                        }
+                    }}
+                </h2>
+                <span class="map-location">
+                    "📍 " 
+                    {move || {
+                        // Access location_resource and extract name, also update town_id
+                        if let Some(result) = location_resource.get() {
+                            if let Ok(Some(location)) = result {
+                                town_id_signal.set(Some(location.town_id.clone()));
+                                location.name
+                            } else {
+                                "Unknown".to_string()
+                            }
+                        } else {
+                            "Loading...".to_string()
+                        }
+                    }}
+                </span>
             </div>
 
             <div class="village-map-wrapper">
-                // Background image
+                // Background image - use town's map_image if available
                 <img
-                    src="/images/starting village.png"
+                    src=move || {
+                        match town_resource.get() {
+                            Some(Ok(Some(town))) => town.map_image.unwrap_or_else(|| "/images/starting village.png".to_string()),
+                            _ => "/images/starting village.png".to_string(),
+                        }
+                    }
                     alt="Kingdom Map"
                     class="village-map-bg"
                 />
 
-                // Clickable location overlays
+                // Clickable location overlays - dynamically generated from database
                 <div class="map-locations-overlay">
-                    <MapLocationOverlay
-                        id="castle"
-                        name="Castle"
-                        icon="👑"
-                        top="15%"
-                        left="50%"
-                    />
-                    <MapLocationOverlay
-                        id="wizard_tower"
-                        name="Wizard Tower"
-                        icon="🗼"
-                        top="22%"
-                        left="25%"
-                    />
-                    <MapLocationOverlay
-                        id="guild_hall"
-                        name="Guild Hall"
-                        icon="⚔️"
-                        top="25%"
-                        left="75%"
-                    />
-                    <MapLocationOverlay
-                        id="temple"
-                        name="Temple"
-                        icon="⛪"
-                        top="40%"
-                        left="15%"
-                    />
-                    <MapLocationOverlay
-                        id="tavern"
-                        name="Tavern"
-                        icon="🍺"
-                        top="50%"
-                        left="35%"
-                    />
-                    <MapLocationOverlay
-                        id="blacksmith"
-                        name="Blacksmith"
-                        icon="🔨"
-                        top="55%"
-                        left="65%"
-                    />
-                    <MapLocationOverlay
-                        id="training"
-                        name="Training"
-                        icon="🎯"
-                        top="45%"
-                        left="85%"
-                    />
-                    <MapLocationOverlay
-                        id="market"
-                        name="Market"
-                        icon="🛒"
-                        top="70%"
-                        left="30%"
-                    />
-                    <MapLocationOverlay
-                        id="arena"
-                        name="Colosseum"
-                        icon="🏟️"
-                        top="70%"
-                        left="60%"
-                    />
-                    <MapLocationOverlay
-                        id="gates"
-                        name="Gates"
-                        icon="🚪"
-                        top="85%"
-                        left="50%"
-                    />
+                    {move || {
+                        match locations_resource.get() {
+                            Some(Ok(locations)) => {
+                                if locations.is_empty() {
+                                    view! { <></> }.into_any()
+                                } else {
+                                    locations.into_iter().map(|loc| {
+                                        let loc_id = loc.id.clone();
+                                        let loc_name = loc.name.clone();
+                                        let loc_icon = loc.icon.clone();
+                                        let top_pos = format!("{}%", loc.map_position_y);
+                                        let left_pos = format!("{}%", loc.map_position_x);
+                                        view! {
+                                            <MapLocationOverlay
+                                                id=loc_id
+                                                name=loc_name
+                                                icon=loc_icon
+                                                top=top_pos
+                                                left=left_pos
+                                            />
+                                        }
+                                    }).collect::<Vec<_>>().into_any()
+                                }
+                            }
+                            _ => view! { <></> }.into_any()
+                        }
+                    }}
                 </div>
             </div>
         </div>
@@ -362,20 +402,21 @@ fn KingdomMap() -> impl IntoView {
 /// Individual map location overlay (positioned absolutely on the map)
 #[component]
 fn MapLocationOverlay(
-    id: &'static str,
-    name: &'static str,
-    icon: &'static str,
-    top: &'static str,
-    left: &'static str,
+    id: String,
+    name: String,
+    icon: String,
+    top: String,
+    left: String,
 ) -> impl IntoView {
     let current_location = expect_context::<RwSignal<String>>();
-    let is_current = move || current_location.get() == id;
+    let id_clone = id.clone();
+    let is_current = move || current_location.get() == id_clone;
 
     view! {
         <button
             class=move || if is_current() { "map-location-overlay active" } else { "map-location-overlay" }
             style=format!("top: {}; left: {};", top, left)
-            on:click=move |_| current_location.set(id.to_string())
+            on:click=move |_| current_location.set(id.clone())
         >
             <div class="location-marker-icon">{icon}</div>
             <span class="location-label">{name}</span>

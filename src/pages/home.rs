@@ -1,8 +1,8 @@
 //! Home page - The main dashboard for players
 
-use leptos::prelude::*;
-use crate::wallet::context::use_wallet;
 use crate::components::StatBar;
+use crate::wallet::context::use_wallet;
+use leptos::prelude::*;
 
 /// Location data structure
 #[derive(Clone, Debug, PartialEq)]
@@ -15,17 +15,72 @@ pub struct Location {
 
 /// Available locations in the kingdom
 const LOCATIONS: &[Location] = &[
-    Location { id: "town_square", name: "Town Square", icon: "🏰", description: "The heart of the town" },
-    Location { id: "guild_hall", name: "Adventurer's Guild", icon: "⚔️", description: "Accept quests" },
-    Location { id: "castle", name: "Castle", icon: "👑", description: "The royal court" },
-    Location { id: "temple", name: "Temple", icon: "⛪", description: "Heal and pray" },
-    Location { id: "tavern", name: "Tavern", icon: "🍺", description: "Rest and rumors" },
-    Location { id: "training", name: "Training Grounds", icon: "🎯", description: "Hone your skills" },
-    Location { id: "market", name: "Marketplace", icon: "🛒", description: "Buy & sell goods" },
-    Location { id: "arena", name: "Colosseum", icon: "🏟️", description: "PvP battles" },
-    Location { id: "gates", name: "Town Gates", icon: "🚪", description: "Leave town" },
-    Location { id: "wizard_tower", name: "Wizard Tower", icon: "🗼", description: "Learn magic" },
-    Location { id: "blacksmith", name: "Blacksmith", icon: "🔨", description: "Forge equipment" },
+    Location {
+        id: "town_square",
+        name: "Town Square",
+        icon: "🏰",
+        description: "The heart of the town",
+    },
+    Location {
+        id: "guild_hall",
+        name: "Adventurer's Guild",
+        icon: "⚔️",
+        description: "Accept quests",
+    },
+    Location {
+        id: "castle",
+        name: "Castle",
+        icon: "👑",
+        description: "The royal court",
+    },
+    Location {
+        id: "temple",
+        name: "Temple",
+        icon: "⛪",
+        description: "Heal and pray",
+    },
+    Location {
+        id: "tavern",
+        name: "Tavern",
+        icon: "🍺",
+        description: "Rest and rumors",
+    },
+    Location {
+        id: "training",
+        name: "Training Grounds",
+        icon: "🎯",
+        description: "Hone your skills",
+    },
+    Location {
+        id: "market",
+        name: "Marketplace",
+        icon: "🛒",
+        description: "Buy & sell goods",
+    },
+    Location {
+        id: "arena",
+        name: "Colosseum",
+        icon: "🏟️",
+        description: "PvP battles",
+    },
+    Location {
+        id: "gates",
+        name: "Town Gates",
+        icon: "🚪",
+        description: "Leave town",
+    },
+    Location {
+        id: "wizard_tower",
+        name: "Wizard Tower",
+        icon: "🗼",
+        description: "Learn magic",
+    },
+    Location {
+        id: "blacksmith",
+        name: "Blacksmith",
+        icon: "🔨",
+        description: "Forge equipment",
+    },
 ];
 
 fn get_location(id: &str) -> Option<&'static Location> {
@@ -38,19 +93,19 @@ pub fn HomePage() -> impl IntoView {
     // Shared state for current location
     let current_location = RwSignal::new("town_square".to_string());
     provide_context(current_location);
-    
+
     view! {
         <div class="three-column-layout">
             // Left Panel - Character Stats (25%)
             <aside class="panel left-panel">
                 <CharacterPanel />
             </aside>
-            
+
             // Center Panel - Main Content (50%)
             <section class="panel center-panel">
                 <CenterContent />
             </section>
-            
+
             // Right Panel - Location Actions (25%)
             <aside class="panel right-panel">
                 <LocationActionsPanel />
@@ -65,11 +120,11 @@ fn CharacterPanel() -> impl IntoView {
     let wallet = use_wallet();
     let is_connected = move || wallet.get().connected;
     let player_info = move || wallet.get().player.clone();
-    
+
     view! {
         <div class="character-panel">
             <h2 class="panel-title">"Character"</h2>
-            
+
             {move || {
                 if is_connected() {
                     view! {
@@ -86,35 +141,35 @@ fn CharacterPanel() -> impl IntoView {
                                 </div>
                                 <div class="character-rank">"Adventurer"</div>
                             </div>
-                            
+
                             // Character Stats
                             <div class="stats-container">
                                 <h3 class="stats-title">"Stats"</h3>
-                                
+
                                 // HP Bar
-                                <StatBar 
-                                    label="HP" 
-                                    current=100 
-                                    max=100 
+                                <StatBar
+                                    label="HP"
+                                    current=100
+                                    max=100
                                     color="#e74c3c"
                                 />
-                                
+
                                 // Mana Bar
-                                <StatBar 
-                                    label="Mana" 
-                                    current=50 
-                                    max=50 
+                                <StatBar
+                                    label="Mana"
+                                    current=50
+                                    max=50
                                     color="#3498db"
                                 />
-                                
+
                                 // Experience Bar
-                                <StatBar 
-                                    label="EXP" 
-                                    current=0 
-                                    max=100 
+                                <StatBar
+                                    label="EXP"
+                                    current=0
+                                    max=100
                                     color="#f1c40f"
                                 />
-                                
+
                                 // Attributes
                                 <div class="attributes">
                                     <div class="attribute">
@@ -133,7 +188,7 @@ fn CharacterPanel() -> impl IntoView {
                                         <span class="attr-value">"10"</span>
                                     </div>
                                 </div>
-                                
+
                                 // Level
                                 <div class="level-display">
                                     <span class="level-label">"Level"</span>
@@ -159,7 +214,7 @@ fn CharacterPanel() -> impl IntoView {
 fn CenterContent() -> impl IntoView {
     let wallet = use_wallet();
     let is_connected = move || wallet.get().connected;
-    
+
     view! {
         <div class="center-content-split">
             {move || {
@@ -190,7 +245,7 @@ fn CenterContent() -> impl IntoView {
                         <>
                             // Kingdom Map (Top)
                             <KingdomMap />
-                            
+
                             // Chat (Bottom)
                             <TavernChat />
                         </>
@@ -210,91 +265,91 @@ fn KingdomMap() -> impl IntoView {
             .map(|l| l.name)
             .unwrap_or("Unknown")
     };
-    
+
     view! {
         <div class="village-map-container">
             <div class="map-header">
                 <h2 class="map-title">"🏰 Eldoria Kingdom"</h2>
                 <span class="map-location">"📍 " {location_name}</span>
             </div>
-            
+
             <div class="village-map-wrapper">
                 // Background image
-                <img 
-                    src="/images/starting village.png" 
-                    alt="Kingdom Map" 
+                <img
+                    src="/images/starting village.png"
+                    alt="Kingdom Map"
                     class="village-map-bg"
                 />
-                
+
                 // Clickable location overlays
                 <div class="map-locations-overlay">
-                    <MapLocationOverlay 
+                    <MapLocationOverlay
                         id="castle"
-                        name="Castle" 
-                        icon="👑" 
+                        name="Castle"
+                        icon="👑"
                         top="15%"
                         left="50%"
                     />
-                    <MapLocationOverlay 
+                    <MapLocationOverlay
                         id="wizard_tower"
-                        name="Wizard Tower" 
-                        icon="🗼" 
+                        name="Wizard Tower"
+                        icon="🗼"
                         top="22%"
                         left="25%"
                     />
-                    <MapLocationOverlay 
+                    <MapLocationOverlay
                         id="guild_hall"
-                        name="Guild Hall" 
-                        icon="⚔️" 
+                        name="Guild Hall"
+                        icon="⚔️"
                         top="25%"
                         left="75%"
                     />
-                    <MapLocationOverlay 
+                    <MapLocationOverlay
                         id="temple"
-                        name="Temple" 
-                        icon="⛪" 
+                        name="Temple"
+                        icon="⛪"
                         top="40%"
                         left="15%"
                     />
-                    <MapLocationOverlay 
+                    <MapLocationOverlay
                         id="tavern"
-                        name="Tavern" 
-                        icon="🍺" 
+                        name="Tavern"
+                        icon="🍺"
                         top="50%"
                         left="35%"
                     />
-                    <MapLocationOverlay 
+                    <MapLocationOverlay
                         id="blacksmith"
-                        name="Blacksmith" 
-                        icon="🔨" 
+                        name="Blacksmith"
+                        icon="🔨"
                         top="55%"
                         left="65%"
                     />
-                    <MapLocationOverlay 
+                    <MapLocationOverlay
                         id="training"
-                        name="Training" 
-                        icon="🎯" 
+                        name="Training"
+                        icon="🎯"
                         top="45%"
                         left="85%"
                     />
-                    <MapLocationOverlay 
+                    <MapLocationOverlay
                         id="market"
-                        name="Market" 
-                        icon="🛒" 
+                        name="Market"
+                        icon="🛒"
                         top="70%"
                         left="30%"
                     />
-                    <MapLocationOverlay 
+                    <MapLocationOverlay
                         id="arena"
-                        name="Colosseum" 
-                        icon="🏟️" 
+                        name="Colosseum"
+                        icon="🏟️"
                         top="70%"
                         left="60%"
                     />
-                    <MapLocationOverlay 
+                    <MapLocationOverlay
                         id="gates"
-                        name="Gates" 
-                        icon="🚪" 
+                        name="Gates"
+                        icon="🚪"
                         top="85%"
                         left="50%"
                     />
@@ -315,9 +370,9 @@ fn MapLocationOverlay(
 ) -> impl IntoView {
     let current_location = expect_context::<RwSignal<String>>();
     let is_current = move || current_location.get() == id;
-    
+
     view! {
-        <button 
+        <button
             class=move || if is_current() { "map-location-overlay active" } else { "map-location-overlay" }
             style=format!("top: {}; left: {};", top, left)
             on:click=move |_| current_location.set(id.to_string())
@@ -332,7 +387,7 @@ fn MapLocationOverlay(
 #[component]
 fn TavernChat() -> impl IntoView {
     let chat_input = RwSignal::new(String::new());
-    
+
     view! {
         <div class="village-chat">
             <div class="chat-header">
@@ -344,37 +399,37 @@ fn TavernChat() -> impl IntoView {
                     <button class="chat-tab">"Whisper"</button>
                 </div>
             </div>
-            
+
             <div class="chat-messages">
-                <ChatMessage 
-                    username="Thorin" 
-                    message="Anyone want to raid the dragon's lair?" 
+                <ChatMessage
+                    username="Thorin"
+                    message="Anyone want to raid the dragon's lair?"
                     time="2m ago"
                     rank="Knight"
                 />
-                <ChatMessage 
-                    username="Elara" 
-                    message="I just found a legendary sword! ⚔️" 
+                <ChatMessage
+                    username="Elara"
+                    message="I just found a legendary sword! ⚔️"
                     time="5m ago"
                     rank="Archmage"
                 />
-                <ChatMessage 
-                    username="Finn" 
-                    message="The tournament starts in 30 minutes" 
+                <ChatMessage
+                    username="Finn"
+                    message="The tournament starts in 30 minutes"
                     time="8m ago"
                     rank="Squire"
                 />
-                <ChatMessage 
-                    username="Herald" 
-                    message="Welcome to Eldoria! New adventurers can visit the Guild Hall for quests." 
+                <ChatMessage
+                    username="Herald"
+                    message="Welcome to Eldoria! New adventurers can visit the Guild Hall for quests."
                     time="10m ago"
                     rank="System"
                 />
             </div>
-            
+
             <div class="chat-input-container">
-                <input 
-                    type="text" 
+                <input
+                    type="text"
                     class="chat-input"
                     placeholder="Type a message..."
                     prop:value=move || chat_input.get()
@@ -400,7 +455,7 @@ fn ChatMessage(
         "Knight" => "rank-chunin",
         _ => "rank-genin",
     };
-    
+
     view! {
         <div class=format!("chat-message {}", rank_class)>
             <div class="message-header">
@@ -419,11 +474,9 @@ fn LocationActionsPanel() -> impl IntoView {
     let wallet = use_wallet();
     let is_connected = move || wallet.get().connected;
     let current_location = expect_context::<RwSignal<String>>();
-    
-    let location_info = move || {
-        get_location(&current_location.get())
-    };
-    
+
+    let location_info = move || get_location(&current_location.get());
+
     view! {
         <div class="location-actions-panel">
             {move || {
@@ -447,7 +500,7 @@ fn LocationActionsPanel() -> impl IntoView {
                                     <span class="location-name-text">{loc.map(|l| l.name).unwrap_or("Unknown")}</span>
                                 </div>
                             </div>
-                            
+
                             // Actions based on location
                             <div class="location-actions">
                                 <LocationActions location_id=current_location.get() />
@@ -465,388 +518,399 @@ fn LocationActionsPanel() -> impl IntoView {
 fn LocationActions(location_id: String) -> impl IntoView {
     match location_id.as_str() {
         "guild_hall" => view! {
-            <ActionButton 
-                name="Accept Quest" 
-                description="Browse available quests" 
-                cost="Free" 
+            <ActionButton
+                name="Accept Quest"
+                description="Browse available quests"
+                cost="Free"
                 icon="📜"
                 category="mission"
             />
-            <ActionButton 
-                name="Turn In Quest" 
-                description="Complete a quest" 
-                cost="Free" 
+            <ActionButton
+                name="Turn In Quest"
+                description="Complete a quest"
+                cost="Free"
                 icon="✅"
                 category="mission"
             />
-            <ActionButton 
-                name="Guild Board" 
-                description="View guild rankings" 
-                cost="Free" 
+            <ActionButton
+                name="Guild Board"
+                description="View guild rankings"
+                cost="Free"
                 icon="📋"
                 category="social"
             />
-            <ActionButton 
-                name="Party Finder" 
-                description="Find adventuring party" 
-                cost="Free" 
+            <ActionButton
+                name="Party Finder"
+                description="Find adventuring party"
+                cost="Free"
                 icon="👥"
                 category="social"
             />
-        }.into_any(),
-        
+        }
+        .into_any(),
+
         "wizard_tower" => view! {
-            <ActionButton 
-                name="Study Fire Magic" 
-                description="Learn fire spells" 
-                cost="1 AP" 
+            <ActionButton
+                name="Study Fire Magic"
+                description="Learn fire spells"
+                cost="1 AP"
                 icon="🔥"
                 category="magic"
             />
-            <ActionButton 
-                name="Study Ice Magic" 
-                description="Learn frost spells" 
-                cost="1 AP" 
+            <ActionButton
+                name="Study Ice Magic"
+                description="Learn frost spells"
+                cost="1 AP"
                 icon="❄️"
                 category="magic"
             />
-            <ActionButton 
-                name="Study Lightning" 
-                description="Learn storm spells" 
-                cost="1 AP" 
+            <ActionButton
+                name="Study Lightning"
+                description="Learn storm spells"
+                cost="1 AP"
                 icon="⚡"
                 category="magic"
             />
-            <ActionButton 
-                name="Enchant Item" 
-                description="Add magic to equipment" 
-                cost="50 Gold" 
+            <ActionButton
+                name="Enchant Item"
+                description="Add magic to equipment"
+                cost="50 Gold"
                 icon="✨"
                 category="craft"
             />
-            <ActionButton 
-                name="Identify Item" 
-                description="Reveal item properties" 
-                cost="10 Gold" 
+            <ActionButton
+                name="Identify Item"
+                description="Reveal item properties"
+                cost="10 Gold"
                 icon="🔍"
                 category="knowledge"
             />
-        }.into_any(),
-        
+        }
+        .into_any(),
+
         "castle" => view! {
-            <ActionButton 
-                name="Audience with King" 
-                description="Request royal quest" 
-                cost="Free" 
+            <ActionButton
+                name="Audience with King"
+                description="Request royal quest"
+                cost="Free"
                 icon="👑"
                 category="mission"
             />
-            <ActionButton 
-                name="Royal Treasury" 
-                description="Exchange rare items" 
-                cost="Free" 
+            <ActionButton
+                name="Royal Treasury"
+                description="Exchange rare items"
+                cost="Free"
                 icon="💎"
                 category="shop"
             />
-            <ActionButton 
-                name="War Council" 
-                description="View kingdom affairs" 
-                cost="Free" 
+            <ActionButton
+                name="War Council"
+                description="View kingdom affairs"
+                cost="Free"
                 icon="🗺️"
                 category="knowledge"
             />
-            <ActionButton 
-                name="Knight's Order" 
-                description="Join the knights" 
-                cost="Free" 
+            <ActionButton
+                name="Knight's Order"
+                description="Join the knights"
+                cost="Free"
                 icon="🛡️"
                 category="social"
             />
-        }.into_any(),
-        
+        }
+        .into_any(),
+
         "temple" => view! {
-            <ActionButton 
-                name="Heal Wounds" 
-                description="Restore HP" 
-                cost="25 Gold" 
+            <ActionButton
+                name="Heal Wounds"
+                description="Restore HP"
+                cost="25 Gold"
                 icon="💚"
                 category="heal"
             />
-            <ActionButton 
-                name="Full Restoration" 
-                description="Restore HP & Mana" 
-                cost="50 Gold" 
+            <ActionButton
+                name="Full Restoration"
+                description="Restore HP & Mana"
+                cost="50 Gold"
                 icon="✝️"
                 category="heal"
             />
-            <ActionButton 
-                name="Remove Curse" 
-                description="Cure afflictions" 
-                cost="100 Gold" 
+            <ActionButton
+                name="Remove Curse"
+                description="Cure afflictions"
+                cost="100 Gold"
                 icon="🙏"
                 category="heal"
             />
-            <ActionButton 
-                name="Learn Holy Magic" 
-                description="Divine spells" 
-                cost="1 AP" 
+            <ActionButton
+                name="Learn Holy Magic"
+                description="Divine spells"
+                cost="1 AP"
                 icon="☀️"
                 category="magic"
             />
-            <ActionButton 
-                name="Donate" 
-                description="Gain blessings" 
-                cost="Variable" 
+            <ActionButton
+                name="Donate"
+                description="Gain blessings"
+                cost="Variable"
                 icon="🪙"
                 category="social"
             />
-        }.into_any(),
-        
+        }
+        .into_any(),
+
         "tavern" => view! {
-            <ActionButton 
-                name="Rest" 
-                description="Recover over time" 
-                cost="5 Gold" 
+            <ActionButton
+                name="Rest"
+                description="Recover over time"
+                cost="5 Gold"
                 icon="🛏️"
                 category="rest"
             />
-            <ActionButton 
-                name="Buy a Drink" 
-                description="Hear rumors" 
-                cost="2 Gold" 
+            <ActionButton
+                name="Buy a Drink"
+                description="Hear rumors"
+                cost="2 Gold"
                 icon="🍺"
                 category="social"
             />
-            <ActionButton 
-                name="Gamble" 
-                description="Try your luck" 
-                cost="Variable" 
+            <ActionButton
+                name="Gamble"
+                description="Try your luck"
+                cost="Variable"
                 icon="🎲"
                 category="social"
             />
-            <ActionButton 
-                name="Recruit Mercenary" 
-                description="Hire help" 
-                cost="50 Gold" 
+            <ActionButton
+                name="Recruit Mercenary"
+                description="Hire help"
+                cost="50 Gold"
                 icon="💂"
                 category="social"
             />
-            <ActionButton 
-                name="Bard's Tale" 
-                description="Gain inspiration" 
-                cost="Free" 
+            <ActionButton
+                name="Bard's Tale"
+                description="Gain inspiration"
+                cost="Free"
                 icon="🎵"
                 category="rest"
             />
-        }.into_any(),
-        
+        }
+        .into_any(),
+
         "training" => view! {
-            <ActionButton 
-                name="Strength Training" 
-                description="Increase STR" 
-                cost="1 AP" 
+            <ActionButton
+                name="Strength Training"
+                description="Increase STR"
+                cost="1 AP"
                 icon="💪"
                 category="melee"
             />
-            <ActionButton 
-                name="Agility Training" 
-                description="Increase DEX" 
-                cost="1 AP" 
+            <ActionButton
+                name="Agility Training"
+                description="Increase DEX"
+                cost="1 AP"
                 icon="🏃"
                 category="melee"
             />
-            <ActionButton 
-                name="Combat Practice" 
-                description="Improve skills" 
-                cost="1 AP" 
+            <ActionButton
+                name="Combat Practice"
+                description="Improve skills"
+                cost="1 AP"
                 icon="⚔️"
                 category="combat"
             />
-            <ActionButton 
-                name="Archery Range" 
-                description="Ranged training" 
-                cost="1 AP" 
+            <ActionButton
+                name="Archery Range"
+                description="Ranged training"
+                cost="1 AP"
                 icon="🏹"
                 category="ranged"
             />
-            <ActionButton 
-                name="Sparring Match" 
-                description="Practice combat" 
-                cost="Free" 
+            <ActionButton
+                name="Sparring Match"
+                description="Practice combat"
+                cost="Free"
                 icon="🤺"
                 category="combat"
             />
-        }.into_any(),
-        
+        }
+        .into_any(),
+
         "blacksmith" => view! {
-            <ActionButton 
-                name="Forge Weapon" 
-                description="Create weapons" 
-                cost="Materials" 
+            <ActionButton
+                name="Forge Weapon"
+                description="Create weapons"
+                cost="Materials"
                 icon="⚔️"
                 category="craft"
             />
-            <ActionButton 
-                name="Forge Armor" 
-                description="Create armor" 
-                cost="Materials" 
+            <ActionButton
+                name="Forge Armor"
+                description="Create armor"
+                cost="Materials"
                 icon="🛡️"
                 category="craft"
             />
-            <ActionButton 
-                name="Repair Equipment" 
-                description="Fix damaged gear" 
-                cost="Variable" 
+            <ActionButton
+                name="Repair Equipment"
+                description="Fix damaged gear"
+                cost="Variable"
                 icon="🔧"
                 category="craft"
             />
-            <ActionButton 
-                name="Upgrade Item" 
-                description="Enhance equipment" 
-                cost="Gold + Mats" 
+            <ActionButton
+                name="Upgrade Item"
+                description="Enhance equipment"
+                cost="Gold + Mats"
                 icon="⬆️"
                 category="craft"
             />
-            <ActionButton 
-                name="Salvage" 
-                description="Break down items" 
-                cost="Free" 
+            <ActionButton
+                name="Salvage"
+                description="Break down items"
+                cost="Free"
                 icon="♻️"
                 category="craft"
             />
-        }.into_any(),
-        
+        }
+        .into_any(),
+
         "market" => view! {
-            <ActionButton 
-                name="Buy Items" 
-                description="Purchase goods" 
-                cost="Free" 
+            <ActionButton
+                name="Buy Items"
+                description="Purchase goods"
+                cost="Free"
                 icon="🛒"
                 category="shop"
             />
-            <ActionButton 
-                name="Sell Items" 
-                description="Sell your loot" 
-                cost="Free" 
+            <ActionButton
+                name="Sell Items"
+                description="Sell your loot"
+                cost="Free"
                 icon="💰"
                 category="shop"
             />
-            <ActionButton 
-                name="Auction House" 
-                description="Player market" 
-                cost="Free" 
+            <ActionButton
+                name="Auction House"
+                description="Player market"
+                cost="Free"
                 icon="🏛️"
                 category="shop"
             />
-            <ActionButton 
-                name="Black Market" 
-                description="Rare goods..." 
-                cost="Free" 
+            <ActionButton
+                name="Black Market"
+                description="Rare goods..."
+                cost="Free"
                 icon="🕶️"
                 category="shop"
             />
-        }.into_any(),
-        
+        }
+        .into_any(),
+
         "arena" => view! {
-            <ActionButton 
-                name="Quick Duel" 
-                description="Fight random opponent" 
-                cost="Free" 
+            <ActionButton
+                name="Quick Duel"
+                description="Fight random opponent"
+                cost="Free"
                 icon="⚔️"
                 category="combat"
             />
-            <ActionButton 
-                name="Ranked Battle" 
-                description="Competitive match" 
-                cost="1 AP" 
+            <ActionButton
+                name="Ranked Battle"
+                description="Competitive match"
+                cost="1 AP"
                 icon="🏆"
                 category="combat"
             />
-            <ActionButton 
-                name="Tournament" 
-                description="Join tournament" 
-                cost="Entry Fee" 
+            <ActionButton
+                name="Tournament"
+                description="Join tournament"
+                cost="Entry Fee"
                 icon="👑"
                 category="combat"
             />
-            <ActionButton 
-                name="Monster Arena" 
-                description="Fight beasts" 
-                cost="10 Gold" 
+            <ActionButton
+                name="Monster Arena"
+                description="Fight beasts"
+                cost="10 Gold"
                 icon="🐉"
                 category="combat"
             />
-            <ActionButton 
-                name="Spectate" 
-                description="Watch battles" 
-                cost="Free" 
+            <ActionButton
+                name="Spectate"
+                description="Watch battles"
+                cost="Free"
                 icon="👀"
                 category="social"
             />
-        }.into_any(),
-        
+        }
+        .into_any(),
+
         "gates" => view! {
-            <ActionButton 
-                name="Guard Duty" 
-                description="Earn gold" 
-                cost="1 AP" 
+            <ActionButton
+                name="Guard Duty"
+                description="Earn gold"
+                cost="1 AP"
                 icon="🛡️"
                 category="mission"
             />
-            <ActionButton 
-                name="Leave Town" 
-                description="Go adventuring" 
-                cost="Free" 
+            <ActionButton
+                name="Leave Town"
+                description="Go adventuring"
+                cost="Free"
                 icon="🚪"
                 category="travel"
             />
-            <ActionButton 
-                name="World Map" 
-                description="View regions" 
-                cost="Free" 
+            <ActionButton
+                name="World Map"
+                description="View regions"
+                cost="Free"
                 icon="🗺️"
                 category="travel"
             />
-            <ActionButton 
-                name="Caravan" 
-                description="Fast travel" 
-                cost="20 Gold" 
+            <ActionButton
+                name="Caravan"
+                description="Fast travel"
+                cost="20 Gold"
                 icon="🐴"
                 category="travel"
             />
-        }.into_any(),
-        
+        }
+        .into_any(),
+
         // Town Square (default)
         _ => view! {
-            <ActionButton 
-                name="Rest" 
-                description="Recover stamina" 
-                cost="Free" 
+            <ActionButton
+                name="Rest"
+                description="Recover stamina"
+                cost="Free"
                 icon="😴"
                 category="rest"
             />
-            <ActionButton 
-                name="Look Around" 
-                description="See what's happening" 
-                cost="Free" 
+            <ActionButton
+                name="Look Around"
+                description="See what's happening"
+                cost="Free"
                 icon="👀"
                 category="social"
             />
-            <ActionButton 
-                name="Town Crier" 
-                description="Hear announcements" 
-                cost="Free" 
+            <ActionButton
+                name="Town Crier"
+                description="Hear announcements"
+                cost="Free"
                 icon="📢"
                 category="knowledge"
             />
-            <ActionButton 
-                name="Bounty Board" 
-                description="View wanted posters" 
-                cost="Free" 
+            <ActionButton
+                name="Bounty Board"
+                description="View wanted posters"
+                cost="Free"
                 icon="📋"
                 category="mission"
             />
-        }.into_any(),
+        }
+        .into_any(),
     }
 }
 
@@ -860,7 +924,7 @@ fn ActionButton(
     category: &'static str,
 ) -> impl IntoView {
     let category_class = format!("action-item category-{}", category);
-    
+
     view! {
         <button class=category_class>
             <div class="action-main">

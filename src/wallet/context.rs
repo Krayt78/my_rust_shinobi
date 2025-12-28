@@ -1,6 +1,6 @@
-use leptos::prelude::*;
 use super::WalletAccount;
 use crate::api::PlayerInfo;
+use leptos::prelude::*;
 
 #[derive(Clone, Debug, Default)]
 pub struct WalletState {
@@ -19,19 +19,18 @@ pub struct WalletState {
 #[component]
 pub fn WalletProvider(children: Children) -> impl IntoView {
     let wallet_state = RwSignal::new(WalletState::default());
-    
+
     provide_context(wallet_state);
-    
+
     children()
 }
 
 /// Hook to access wallet state - returns Option to handle cases where context isn't available
 pub fn use_wallet() -> RwSignal<WalletState> {
-    use_context::<RwSignal<WalletState>>()
-        .unwrap_or_else(|| {
-            // Create a default signal if context not found (during SSR)
-            RwSignal::new(WalletState::default())
-        })
+    use_context::<RwSignal<WalletState>>().unwrap_or_else(|| {
+        // Create a default signal if context not found (during SSR)
+        RwSignal::new(WalletState::default())
+    })
 }
 
 /// Hook to try to access wallet state - returns None if not in WalletProvider

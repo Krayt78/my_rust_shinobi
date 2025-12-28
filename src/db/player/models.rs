@@ -22,4 +22,3 @@ pub struct CreatePlayer {
     pub wallet_address: String,
     pub username: Option<String>,
 }
-

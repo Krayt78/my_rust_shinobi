@@ -33,4 +33,3 @@ pub struct CreateGuild {
     pub description: Option<String>,
     pub leader_id: Uuid,
 }
-

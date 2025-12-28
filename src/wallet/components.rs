@@ -1,11 +1,11 @@
-use leptos::prelude::*;
-use super::{context::use_wallet, connect_polkadot_wallet, WalletAccount};
+use super::{connect_polkadot_wallet, context::use_wallet, WalletAccount};
 use crate::api::authenticate_player;
+use leptos::prelude::*;
 
 #[component]
 pub fn ConnectWalletButton() -> impl IntoView {
     let wallet = use_wallet();
-    
+
     // Use Action::new_local for non-Send futures (JavaScript futures)
     let connect_action = Action::new_local(move |_: &()| async move {
         // Set loading state
@@ -13,28 +13,28 @@ pub fn ConnectWalletButton() -> impl IntoView {
             w.loading = true;
             w.error = None;
         });
-        
+
         // Step 1: Connect to wallet extension
         match connect_polkadot_wallet("Realm of Legends").await {
             Ok(accounts) => {
                 let selected_account = accounts.first().cloned();
-                
+
                 wallet.update(|w| {
                     w.accounts = accounts.clone();
                     w.selected_account = selected_account.clone();
                 });
-                
+
                 // Step 2: Authenticate with the server
                 if let Some(account) = selected_account {
                     match authenticate_player(account.address.clone()).await {
                         Ok(player_info) => {
                             let is_new = player_info.is_new;
                             leptos::logging::log!(
-                                "Player authenticated: {} (new: {})", 
-                                player_info.id, 
+                                "Player authenticated: {} (new: {})",
+                                player_info.id,
                                 is_new
                             );
-                            
+
                             wallet.update(|w| {
                                 w.loading = false;
                                 w.connected = true;
@@ -66,17 +66,19 @@ pub fn ConnectWalletButton() -> impl IntoView {
             }
         }
     });
-    
+
     let is_loading = move || wallet.get().loading;
     let is_connected = move || wallet.get().connected;
     let selected_address = move || {
-        wallet.get().selected_account
+        wallet
+            .get()
+            .selected_account
             .map(|a| truncate_address(&a.address))
     };
     let error_message = move || wallet.get().error.clone();
     let player_info = move || wallet.get().player.clone();
     let is_new_player = move || wallet.get().is_new_player;
-    
+
     view! {
         <div class="wallet-container">
             {move || {
@@ -110,7 +112,7 @@ pub fn ConnectWalletButton() -> impl IntoView {
                     }.into_any()
                 }
             }}
-            
+
             // Show welcome message for new players
             {move || {
                 if is_new_player() {
@@ -123,7 +125,7 @@ pub fn ConnectWalletButton() -> impl IntoView {
                     None
                 }
             }}
-            
+
             {move || error_message().map(|e| view! {
                 <p class="wallet-error">{e}</p>
             })}
@@ -136,11 +138,11 @@ fn AccountSelector() -> impl IntoView {
     let wallet = use_wallet();
     let accounts = move || wallet.get().accounts.clone();
     let selected = move || wallet.get().selected_account.clone();
-    
+
     let on_select = move |account: WalletAccount| {
         wallet.update(|w| w.selected_account = Some(account));
     };
-    
+
     view! {
         <select
             class="account-selector"
@@ -171,7 +173,7 @@ fn AccountSelector() -> impl IntoView {
 
 fn truncate_address(address: &str) -> String {
     if address.len() > 12 {
-        format!("{}...{}", &address[..6], &address[address.len()-4..])
+        format!("{}...{}", &address[..6], &address[address.len() - 4..])
     } else {
         address.to_string()
     }

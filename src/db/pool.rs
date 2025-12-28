@@ -7,10 +7,10 @@ use std::time::Duration;
 pub type DbPool = PgPool;
 
 /// Initialize the database connection pool
-/// 
+///
 /// # Arguments
 /// * `database_url` - PostgreSQL connection string
-/// 
+///
 /// # Returns
 /// * `Result<DbPool, sqlx::Error>` - Connection pool or error
 pub async fn init_db_pool(database_url: &str) -> Result<DbPool, sqlx::Error> {
@@ -25,17 +25,13 @@ pub async fn init_db_pool(database_url: &str) -> Result<DbPool, sqlx::Error> {
 
 /// Get the database URL from environment variables
 pub fn get_database_url() -> String {
-    std::env::var("DATABASE_URL")
-        .expect("DATABASE_URL must be set in environment or .env file")
+    std::env::var("DATABASE_URL").expect("DATABASE_URL must be set in environment or .env file")
 }
 
 /// Run database migrations
-/// 
+///
 /// This should be called on application startup to ensure
 /// the database schema is up to date.
 pub async fn run_migrations(pool: &DbPool) -> Result<(), sqlx::migrate::MigrateError> {
-    sqlx::migrate!("./migrations")
-        .run(pool)
-        .await
+    sqlx::migrate!("./migrations").run(pool).await
 }
-

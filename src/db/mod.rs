@@ -1,9 +1,9 @@
 //! Database module for PostgreSQL connection and queries
-//! 
+//!
 //! This module is only available on the server side (ssr feature).
-//! 
+//!
 //! ## Structure
-//! 
+//!
 //! - `pool` - Database connection pool management
 //! - `player` - Player accounts and authentication
 //! - `character` - Characters, stats, and state tracking  

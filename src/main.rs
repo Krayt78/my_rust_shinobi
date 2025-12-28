@@ -1,4 +1,3 @@
-
 #[cfg(feature = "ssr")]
 #[tokio::main]
 async fn main() {
@@ -7,7 +6,7 @@ async fn main() {
     use leptos::prelude::*;
     use leptos_axum::{generate_route_list, LeptosRoutes};
     use my_rust_shinobi::app::*;
-    use my_rust_shinobi::db::{init_db_pool, get_database_url, run_migrations, DbPool};
+    use my_rust_shinobi::db::{get_database_url, init_db_pool, run_migrations, DbPool};
 
     // Load environment variables from .env file
     dotenvy::dotenv().ok();
@@ -15,11 +14,11 @@ async fn main() {
     // Initialize database connection pool
     let database_url = get_database_url();
     log!("Connecting to database...");
-    
+
     let db_pool: DbPool = init_db_pool(&database_url)
         .await
         .expect("Failed to connect to database. Make sure PostgreSQL is running and DATABASE_URL is correct.");
-    
+
     log!("Database connected successfully!");
 
     // Run migrations if enabled
@@ -34,7 +33,7 @@ async fn main() {
     let conf = get_configuration(None).unwrap();
     let addr = conf.leptos_options.site_addr;
     let leptos_options = conf.leptos_options;
-    
+
     // Generate the list of routes in your Leptos App
     let routes = generate_route_list(App);
 

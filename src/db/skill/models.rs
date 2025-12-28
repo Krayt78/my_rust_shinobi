@@ -40,4 +40,3 @@ pub struct CreateSkill {
     pub base_damage: Option<i32>,
     pub required_level: i32,
 }
-

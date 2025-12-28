@@ -1,7 +1,7 @@
 //! My Rust Shinobi - A ninja-themed web game built with Leptos
 
-pub mod app;
 pub mod api;
+pub mod app;
 pub mod components;
 pub mod db;
 pub mod pages;

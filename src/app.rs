@@ -7,9 +7,9 @@ use leptos_router::{
     StaticSegment,
 };
 
-use crate::wallet::WalletProvider;
 use crate::components::TopNavBar;
-use crate::pages::{HomePage, CharacterPage};
+use crate::pages::{CharacterPage, HomePage};
+use crate::wallet::WalletProvider;
 
 /// Server-side rendered HTML shell
 pub fn shell(options: LeptosOptions) -> impl IntoView {
@@ -44,13 +44,13 @@ pub fn App() -> impl IntoView {
     view! {
         <Stylesheet id="leptos" href="/pkg/my_rust_shinobi.css"/>
         <Title text="Realm of Legends"/>
-        
+
         <WalletProvider>
             <Router>
                 <div class="game-container">
                     // Top Navigation Bar
                     <TopNavBar />
-                    
+
                     // Main Content Area
                     <main class="main-content">
                         <Routes fallback=|| "Page not found.".into_view()>

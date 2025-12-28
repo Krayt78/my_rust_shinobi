@@ -1,6 +1,6 @@
 //! Character-related database queries
 
-use super::models::{Character, CreateCharacter, PlayerLocation, ActionCooldown};
+use super::models::{ActionCooldown, Character, CreateCharacter, PlayerLocation};
 use crate::db::DbPool;
 use chrono::Utc;
 use uuid::Uuid;
@@ -23,7 +23,7 @@ pub async fn get_characters_by_player(
         FROM characters
         WHERE player_id = $1
         ORDER BY created_at DESC
-        "#
+        "#,
     )
     .bind(player_id)
     .fetch_all(pool)
@@ -43,7 +43,7 @@ pub async fn get_character_by_id(
                character_class, created_at, updated_at
         FROM characters
         WHERE id = $1
-        "#
+        "#,
     )
     .bind(character_id)
     .fetch_optional(pool)
@@ -57,14 +57,14 @@ pub async fn create_character(
 ) -> Result<Character, sqlx::Error> {
     let now = Utc::now();
     let id = Uuid::new_v4();
-    
+
     // Default starting stats for a new adventurer
     let starting_health = 100;
     let starting_mana = 50;
     let starting_stat = 10;
     let starting_gold: i64 = 100;
     let starting_ap = 10;
-    
+
     sqlx::query_as::<_, Character>(
         r#"
         INSERT INTO characters (
@@ -79,7 +79,7 @@ pub async fn create_character(
                   mana, max_mana, strength, dexterity, intelligence,
                   constitution, wisdom, charisma, gold, action_points, max_action_points,
                   character_class, created_at, updated_at
-        "#
+        "#,
     )
     .bind(id)
     .bind(data.player_id)
@@ -114,7 +114,7 @@ pub async fn update_character_stats(
             max_mana = $4, mana = $4, strength = $5, dexterity = $6,
             intelligence = $7, updated_at = $8
         WHERE id = $9
-        "#
+        "#,
     )
     .bind(level)
     .bind(experience)
@@ -127,24 +127,21 @@ pub async fn update_character_stats(
     .bind(character_id)
     .execute(pool)
     .await?;
-    
+
     Ok(())
 }
 
 /// Check if a character name is already taken
-pub async fn is_character_name_taken(
-    pool: &DbPool,
-    name: &str,
-) -> Result<bool, sqlx::Error> {
+pub async fn is_character_name_taken(pool: &DbPool, name: &str) -> Result<bool, sqlx::Error> {
     let count: (i64,) = sqlx::query_as(
         r#"
         SELECT COUNT(*) FROM characters WHERE LOWER(name) = LOWER($1)
-        "#
+        "#,
     )
     .bind(name)
     .fetch_one(pool)
     .await?;
-    
+
     Ok(count.0 > 0)
 }
 
@@ -162,7 +159,7 @@ pub async fn get_player_location(
         SELECT id, character_id, town_id, location_id, entered_at
         FROM player_locations
         WHERE character_id = $1
-        "#
+        "#,
     )
     .bind(character_id)
     .fetch_optional(pool)
@@ -177,7 +174,7 @@ pub async fn set_player_location(
     location_id: Option<Uuid>,
 ) -> Result<PlayerLocation, sqlx::Error> {
     let now = Utc::now();
-    
+
     sqlx::query_as::<_, PlayerLocation>(
         r#"
         INSERT INTO player_locations (id, character_id, town_id, location_id, entered_at)
@@ -185,7 +182,7 @@ pub async fn set_player_location(
         ON CONFLICT (character_id) DO UPDATE 
         SET town_id = $2, location_id = $3, entered_at = $4
         RETURNING id, character_id, town_id, location_id, entered_at
-        "#
+        "#,
     )
     .bind(character_id)
     .bind(town_id)
@@ -207,7 +204,7 @@ pub async fn set_action_cooldown(
     cooldown_seconds: i32,
 ) -> Result<ActionCooldown, sqlx::Error> {
     let available_at = Utc::now() + chrono::Duration::seconds(cooldown_seconds as i64);
-    
+
     sqlx::query_as::<_, ActionCooldown>(
         r#"
         INSERT INTO action_cooldowns (id, character_id, action_id, available_at)
@@ -215,7 +212,7 @@ pub async fn set_action_cooldown(
         ON CONFLICT (character_id, action_id) DO UPDATE 
         SET available_at = $3
         RETURNING id, character_id, action_id, available_at
-        "#
+        "#,
     )
     .bind(character_id)
     .bind(action_id)
@@ -234,24 +231,21 @@ pub async fn is_action_on_cooldown(
         r#"
         SELECT available_at FROM action_cooldowns
         WHERE character_id = $1 AND action_id = $2 AND available_at > NOW()
-        "#
+        "#,
     )
     .bind(character_id)
     .bind(action_id)
     .fetch_optional(pool)
     .await?;
-    
+
     Ok(result.is_some())
 }
 
 /// Clean up expired cooldowns
 pub async fn cleanup_expired_cooldowns(pool: &DbPool) -> Result<u64, sqlx::Error> {
-    let result = sqlx::query(
-        r#"DELETE FROM action_cooldowns WHERE available_at <= NOW()"#
-    )
-    .execute(pool)
-    .await?;
-    
+    let result = sqlx::query(r#"DELETE FROM action_cooldowns WHERE available_at <= NOW()"#)
+        .execute(pool)
+        .await?;
+
     Ok(result.rows_affected())
 }
-

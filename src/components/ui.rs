@@ -14,8 +14,12 @@ pub fn StatBar(
     /// Color of the bar (CSS color string)
     color: &'static str,
 ) -> impl IntoView {
-    let percentage = if max > 0 { (current as f64 / max as f64) * 100.0 } else { 0.0 };
-    
+    let percentage = if max > 0 {
+        (current as f64 / max as f64) * 100.0
+    } else {
+        0.0
+    };
+
     view! {
         <div class="stat-bar">
             <div class="stat-label">
@@ -23,7 +27,7 @@ pub fn StatBar(
                 <span class="stat-values">{current}"/" {max}</span>
             </div>
             <div class="stat-bar-bg">
-                <div 
+                <div
                     class="stat-bar-fill"
                     style:width=format!("{}%", percentage)
                     style:background-color=color
@@ -32,4 +36,3 @@ pub fn StatBar(
         </div>
     }
 }
-

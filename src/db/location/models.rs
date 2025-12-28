@@ -195,7 +195,7 @@ pub struct ItemReward {
     pub item_id: Uuid,
     pub quantity: i32,
     #[serde(default = "default_chance")]
-    pub chance: f32,  // 0.0 - 1.0, for random drops
+    pub chance: f32, // 0.0 - 1.0, for random drops
 }
 
 fn default_chance() -> f32 {
@@ -224,7 +224,6 @@ pub struct StatChanges {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UnlockReward {
-    pub unlock_type: String,  // "location", "action", "quest", "skill"
+    pub unlock_type: String, // "location", "action", "quest", "skill"
     pub target_id: Uuid,
 }
-

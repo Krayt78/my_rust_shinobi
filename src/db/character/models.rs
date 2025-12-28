@@ -77,4 +77,3 @@ pub struct CompletedAction {
     pub completed_at: DateTime<Utc>,
     pub times_completed: i32,
 }
-

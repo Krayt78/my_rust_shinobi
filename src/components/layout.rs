@@ -5,7 +5,6 @@ use leptos_router::hooks::use_location;
 
 use crate::wallet::ConnectWalletButton;
 
-
 //TODO: move elsewhere
 #[derive(Debug, PartialEq)]
 enum Page {
@@ -46,20 +45,19 @@ pub fn TopNavBar() -> impl IntoView {
 
     println!("{}", location.pathname.get_untracked());
 
-
     view! {
         <header class="top-nav">
             <div class="nav-logo">
                 <span class="logo-icon">"⚔️"</span>
                 <span class="logo-text">"Realm of Legends"</span>
             </div>
-            
+
             <nav class="nav-menu">
                 <a href="/" class=move || format!("nav-item{}", if is_home() { " active" } else { "" })>"🏠 Home"</a>
                 <a href="/character" class=move || format!("nav-item{}", if is_character() { " active" } else { "" })>"🧙 Character"</a>
                 <a href="/quests" class=move || format!("nav-item{}", if is_quests() { " active" } else { "" })>"📜 Quests"</a>
             </nav>
-            
+
             <div class="nav-wallet">
                 <ConnectWalletButton />
             </div>

@@ -5,4 +5,3 @@ mod queries;
 
 pub use models::*;
 pub use queries::*;
-

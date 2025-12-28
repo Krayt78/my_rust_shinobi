@@ -37,4 +37,3 @@ pub struct CreateItem {
     pub base_price: i64,
     pub stats: Option<serde_json::Value>,
 }
-

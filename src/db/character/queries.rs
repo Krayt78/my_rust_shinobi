@@ -1,7 +1,7 @@
 //! Character-related database queries
 
-use super::models::{ActionCooldown, Character, CreateCharacter, PlayerLocation};
-use crate::db::DbPool;
+use super::models::{ActionCooldown, Character, CreateCharacter};
+use crate::db::{DbPool, CharacterClass, Location};
 use chrono::Utc;
 use uuid::Uuid;
 
@@ -19,7 +19,7 @@ pub async fn get_characters_by_player(
         SELECT id, player_id, name, level, experience, health, max_health,
                mana, max_mana, strength, dexterity, intelligence,
                constitution, wisdom, charisma, gold, action_points, max_action_points,
-               character_class, created_at, updated_at
+               character_class, created_at, updated_at, location_id
         FROM characters
         WHERE player_id = $1
         ORDER BY created_at DESC
@@ -40,7 +40,7 @@ pub async fn get_character_by_id(
         SELECT id, player_id, name, level, experience, health, max_health,
                mana, max_mana, strength, dexterity, intelligence,
                constitution, wisdom, charisma, gold, action_points, max_action_points,
-               character_class, created_at, updated_at
+               character_class, created_at, updated_at, location_id
         FROM characters
         WHERE id = $1
         "#,
@@ -64,6 +64,10 @@ pub async fn create_character(
     let starting_stat = 10;
     let starting_gold: i64 = 100;
     let starting_ap = 10;
+    let starting_class = CharacterClass::Adventurer;
+    // Default Location is the Tavern of Eldoria
+    // its id is b0000000-0000-0000-0000-000000000005 for now
+    let starting_location_id = Uuid::parse_str("b0000000-0000-0000-0000-000000000005").unwrap();
 
     sqlx::query_as::<_, Character>(
         r#"
@@ -72,13 +76,13 @@ pub async fn create_character(
             health, max_health, mana, max_mana,
             strength, dexterity, intelligence, constitution, wisdom, charisma,
             gold, action_points, max_action_points,
-            character_class, created_at, updated_at
+            character_class, location_id, created_at, updated_at
         )
-        VALUES ($1, $2, $3, 1, 0, $4, $4, $5, $5, $6, $6, $6, $6, $6, $6, $7, $8, $8, $9, $10, $10)
+        VALUES ($1, $2, $3, 1, 0, $4, $4, $5, $5, $6, $6, $6, $6, $6, $6, $7, $8, $8, $9, $10, $11, $11)
         RETURNING id, player_id, name, level, experience, health, max_health,
                   mana, max_mana, strength, dexterity, intelligence,
                   constitution, wisdom, charisma, gold, action_points, max_action_points,
-                  character_class, created_at, updated_at
+                  character_class, location_id, created_at, updated_at
         "#,
     )
     .bind(id)
@@ -89,7 +93,8 @@ pub async fn create_character(
     .bind(starting_stat)
     .bind(starting_gold)
     .bind(starting_ap)
-    .bind(&data.character_class)
+    .bind(starting_class)
+    .bind(starting_location_id)
     .bind(now)
     .fetch_one(pool)
     .await
@@ -145,50 +150,44 @@ pub async fn is_character_name_taken(pool: &DbPool, name: &str) -> Result<bool, 
     Ok(count.0 > 0)
 }
 
-// ============================================================================
-// Player Location Tracking
-// ============================================================================
-
-/// Get character's current location
-pub async fn get_player_location(
+/// Update character's location
+pub async fn update_character_location(
     pool: &DbPool,
     character_id: Uuid,
-) -> Result<Option<PlayerLocation>, sqlx::Error> {
-    sqlx::query_as::<_, PlayerLocation>(
+    location_id: Uuid,
+) -> Result<(), sqlx::Error> {
+    sqlx::query(
         r#"
-        SELECT id, character_id, town_id, location_id, entered_at
-        FROM player_locations
-        WHERE character_id = $1
+        UPDATE characters
+        SET location_id = $1, updated_at = $2
+        WHERE id = $3
         "#,
     )
+    .bind(location_id)
+    .bind(Utc::now())
     .bind(character_id)
-    .fetch_optional(pool)
-    .await
+    .execute(pool)
+    .await?;
+
+    Ok(())
 }
 
-/// Set character's location (upsert)
-pub async fn set_player_location(
+/// Get location info for a character (by their location_id)
+pub async fn get_character_location_info(
     pool: &DbPool,
-    character_id: Uuid,
-    town_id: Uuid,
-    location_id: Option<Uuid>,
-) -> Result<PlayerLocation, sqlx::Error> {
-    let now = Utc::now();
-
-    sqlx::query_as::<_, PlayerLocation>(
+    location_id: Uuid,
+) -> Result<Option<Location>, sqlx::Error> {
+    sqlx::query_as::<_, Location>(
         r#"
-        INSERT INTO player_locations (id, character_id, town_id, location_id, entered_at)
-        VALUES (gen_random_uuid(), $1, $2, $3, $4)
-        ON CONFLICT (character_id) DO UPDATE 
-        SET town_id = $2, location_id = $3, entered_at = $4
-        RETURNING id, character_id, town_id, location_id, entered_at
+        SELECT id, town_id, name, description, icon, location_type,
+               map_position_x, map_position_y, required_level, required_quest_id,
+               is_active, sort_order, created_at, updated_at
+        FROM locations
+        WHERE id = $1
         "#,
     )
-    .bind(character_id)
-    .bind(town_id)
     .bind(location_id)
-    .bind(now)
-    .fetch_one(pool)
+    .fetch_optional(pool)
     .await
 }
 

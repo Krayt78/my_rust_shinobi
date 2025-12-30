@@ -4,6 +4,7 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 use uuid::Uuid;
+use crate::db::CharacterClass;
 
 /// Character - the adventurer a player controls
 #[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
@@ -26,9 +27,10 @@ pub struct Character {
     pub gold: i64,
     pub action_points: i32,
     pub max_action_points: i32,
-    pub character_class: Option<String>,
+    pub character_class: CharacterClass,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
+    pub location_id: Uuid,
 }
 
 /// Data for creating a new character
@@ -36,7 +38,6 @@ pub struct Character {
 pub struct CreateCharacter {
     pub player_id: Uuid,
     pub name: String,
-    pub character_class: Option<String>,
 }
 
 impl Default for CreateCharacter {
@@ -44,19 +45,8 @@ impl Default for CreateCharacter {
         Self {
             player_id: Uuid::nil(),
             name: String::new(),
-            character_class: None,
         }
     }
-}
-
-/// Tracks where a character currently is
-#[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
-pub struct PlayerLocation {
-    pub id: Uuid,
-    pub character_id: Uuid,
-    pub town_id: Uuid,
-    pub location_id: Option<Uuid>,
-    pub entered_at: DateTime<Utc>,
 }
 
 /// Tracks cooldowns for location actions

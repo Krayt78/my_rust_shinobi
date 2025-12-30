@@ -2,6 +2,7 @@
 
 mod models;
 mod queries;
+pub mod types;
 
 pub use models::*;
 pub use queries::*;

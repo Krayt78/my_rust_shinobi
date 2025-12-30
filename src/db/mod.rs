@@ -42,7 +42,7 @@ pub use pool::*;
 pub use player::*;
 
 #[cfg(feature = "ssr")]
-pub use character::*;
+pub use character::{*, types::CharacterClass};
 
 #[cfg(feature = "ssr")]
 pub use location::*;
@@ -55,3 +55,5 @@ pub use skill::*;
 
 #[cfg(feature = "ssr")]
 pub use guild::*;
+
+
